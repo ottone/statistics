@@ -1,0 +1,34 @@
+
+# Create index.html and script.js files for the JavaScript project
+
+# HTML content for index.html
+html_content = """<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistica con JavaScript</title>
+</head>
+<body>
+  <h1>Calcolo della media</h1>
+  <p id="risultato">La media verrà mostrata qui.</p>
+
+  <!-- Collegamento al file JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
+"""
+
+# JavaScript content for script.js
+js_content = """const dati = [10, 20, 30, 40, 50];
+const media = dati.reduce((a, b) => a + b, 0) / dati.length;
+
+document.getElementById("risultato").textContent = `La media è: ${media}`;
+"""
+
+# Write the contents to respective files
+with open("index.html", "w", encoding="utf-8") as html_file:
+    html_file.write(html_content)
+
+with open("script.js", "w", encoding="utf-8") as js_file:
+    js_file.write(js_content)
+
