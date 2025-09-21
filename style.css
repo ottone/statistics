@@ -1,0 +1,17 @@
+body {
+  background-color: #f9f9f9;
+  font-family: 'Arial', sans-serif;
+}
+h1 {
+  color: #2c3e50;
+}
+ul li {
+  margin-bottom: 8px;
+}
+ul li a {
+  text-decoration: none;
+  color: #007bff;
+}
+ul li a:hover {
+  text-decoration: underline;
+}
