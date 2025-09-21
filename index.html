@@ -56,17 +56,24 @@
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          }
+          plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: '#ffffff' } },
+          y: { ticks: { color: '#ffffff' } }
         }
-      }
+}
     });
+
+    const footerHTML = `
+    <footer class="mt-5">
+      <p><small>&copy; 2025 Francesco – Powered by GitHub Pages</small></p>
+    </footer>
+  `;
+  document.getElementById('footer-placeholder').innerHTML = footerHTML;
   </script>
 
-  <footer class="mt-5">
-    <p><small>&copy; 2025 Francesco – Powered by GitHub Pages</small></p>
-  </footer>
+  <div id="footer-placeholder"></div>
 </body>
 </html>

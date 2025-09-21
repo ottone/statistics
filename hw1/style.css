@@ -1,17 +1,43 @@
 body {
-  background-color: #f9f9f9;
-  font-family: 'Arial', sans-serif;
+  background-color: #000000; /* sfondo nero */
+  color: #ffffff; /* testo bianco */
+  font-family: Arial, sans-serif;
 }
-h1 {
-  color: #2c3e50;
+
+h1, h2 {
+  color: #ffffff; /* titoli bianchi */
 }
-ul li {
+
+nav h2 {
+  margin-bottom: 10px;
+}
+
+ul#menu li {
   margin-bottom: 8px;
 }
-ul li a {
+
+ul#menu li a {
   text-decoration: none;
-  color: #007bff;
+  font-weight: bold;
+  color: #1e90ff; /* link azzurri per risaltare sul nero */
 }
-ul li a:hover {
+
+ul#menu li a:hover {
   text-decoration: underline;
+  color: #00bfff; /* colore hover leggermente più chiaro */
+}
+
+footer p {
+  color: #aaaaaa; /* colore più soft per il footer */
+}
+
+options: {
+  responsive: true,
+  plugins: {
+    legend: { display: false }
+  },
+  scales: {
+    x: { ticks: { color: '#ffffff' } },
+    y: { ticks: { color: '#ffffff' } }
+  }
 }

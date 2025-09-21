@@ -14,21 +14,14 @@ html_content = """<!DOCTYPE html>
   <p id="risultato">La media verrà mostrata qui.</p>
 
   <!-- Collegamento al file JavaScript -->
-  <script src="script.js"></script>
+  <script src="script.js">
+
+   const footerHTML = `
+    <footer class="mt-5"><p><small>&copy; 2025 Francesco – Powered by GitHub Pages</small></p></footer>
+  `;
+  document.getElementById('footer-placeholder').innerHTML = footerHTML;
+  </script>
+
+  <div id="footer-placeholder"></div>  
 </body>
 </html>
-"""
-
-# JavaScript content for script.js
-js_content = """const dati = [10, 20, 30, 40, 50];
-const media = dati.reduce((a, b) => a + b, 0) / dati.length;
-
-document.getElementById("risultato").textContent = `La media è: ${media}`;
-"""
-
-# Write the contents to respective files
-with open("index.html", "w", encoding="utf-8") as html_file:
-    html_file.write(html_content)
-
-with open("script.js", "w", encoding="utf-8") as js_file:
-    js_file.write(js_content)
