@@ -1,17 +1,75 @@
+/* ======== Stile generale ======== */
 body {
-  background-color: #f9f9f9;
   font-family: 'Arial', sans-serif;
+  color: #f1f1f1;
+  background: url("images/background.avif") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
 }
-h1 {
-  color: #2c3e50;
+
+/* Aggiungiamo un overlay trasparente per rendere leggibile il testo */
+.container, header, section, footer {
+  background-color: rgba(0, 0, 0, 0.65); /* nero trasparente */
+  padding: 20px;
+  border-radius: 10px;
 }
+
+h1, h2 {
+  color: #00c4ff; /* blu cibernetico */
+}
+
+/* Titoli dentro il main degli homework */
+main h2, section h2 {
+  text-align: left;
+  color: #00c4ff; /* blu cibernetico */
+  font-size: 1.6rem;
+  margin-top: 30px;
+}
+
+p.lead {
+  color: #ccc;
+}
+
+/* ======== Lista Homework ======== */
 ul li {
   margin-bottom: 8px;
 }
+
 ul li a {
   text-decoration: none;
-  color: #007bff;
+  color: #00bfff; /* link blu chiaro */
+  transition: color 0.2s ease-in-out;
 }
+
 ul li a:hover {
   text-decoration: underline;
+  color: #1e90ff;
+}
+
+/* ======== Immagine header ======== */
+.header-img {
+  width: 100%;         /* prende tutta la larghezza */
+  height: 200px;       /* altezza fissa */
+  object-fit: cover;   /* taglia l’immagine senza deformarla */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+main {
+  background-color: rgba(0, 0, 0, 0.7); /* nero trasparente */
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  color: #f1f1f1; /* testo chiaro */
+}
+
+/* ======== Footer ======== */
+footer {
+  margin-top: 50px;
+  padding: 20px 0;
+  color: #aaa;
+  font-size: 0.9em;
+}
+footer hr {
+  border-color: #333;
 }
