@@ -7,6 +7,15 @@ body {
   margin: 0;
 }
 
+/* Indentazione per sezioni tecniche */
+.subsection {
+  margin-left: 30px;
+  padding-left: 10px;
+  background-color: transparent;  /* nessun sfondo distintivo */
+  border-left: none;               /* rimuovi la linea se ce l’hai messa */
+}
+
+
 /* Aggiungiamo un overlay trasparente per rendere leggibile il testo */
 .container, header, section, footer {
   background-color: rgba(0, 0, 0, 0.65); /* nero trasparente */
@@ -14,7 +23,7 @@ body {
   border-radius: 10px;
 }
 
-h1, h2 {
+h1, h2 ,strong {
   color: #00c4ff; /* blu cibernetico */
 }
 
