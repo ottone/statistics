@@ -90,140 +90,224 @@
     <li>They make it easier to visualize trends and relationships.</li>
     <li>They are the foundation for statistical and probabilistic analysis.</li>
   </ul>
-  <h2>Query Distributions</h2>
-  <p>Select one variable for a <strong>univariate</strong> distribution, or two for a <strong>bivariate</strong> analysis.</p>
-
-  <div>
-    <label for="var1">Variable 1:</label>
-    <select id="var1">
-      <option value="">-- choose --</option>
-      <option value="Age">Age</option>
-      <option value="Gender">Gender</option>
-      <option value="Grade">Grade</option>
-    </select>
-
-    <label for="var2">Variable 2:</label>
-    <select id="var2">
-      <option value="">-- none --</option>
-      <option value="Age">Age</option>
-      <option value="Gender">Gender</option>
-      <option value="Grade">Grade</option>
-    </select>
-
-    <button id="computeBtn">Compute Distribution</button>
-  </div>
-
-  <div id="chartContainer">
-    <canvas id="chart"></canvas>
-  </div>
   
-  <h1>Interactive Dataset and Distributions</h1>
+  <h2>Interactive Dataset and Distributions</h2>
 
   <p>
     This interactive demo uses a small dataset stored in JavaScript.
     You can compute and visualize univariate or bivariate distributions using Chart.js.
   </p>
 
-  <h2>Dataset</h2>
-  <table>
-    <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Grade</th></tr>
-    <tr><td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td></tr>
-    <tr><td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td></tr>
-    <tr><td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td></tr>
-    <tr><td>4</td><td>Sara</td><td>22</td><td>F</td><td>26</td></tr>
-    <tr><td>5</td><td>Giulia</td><td>21</td><td>F</td><td>30</td></tr>
-  </table>
+  <section>
+    <h2>Dataset</h2>
+    <div class="card">
+      <table>
+        <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Grade</th></tr>
+        <tr><td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td></tr>
+        <tr><td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td></tr>
+        <tr><td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td></tr>
+        <tr><td>4</td><td>Sara</td><td>22</td><td>F</td><td>26</td></tr>
+        <tr><td>5</td><td>Giulia</td><td>21</td><td>F</td><td>30</td></tr>
+      </table>
+      <p class="hint">Rows = observations, columns = variables.</p>
+    </div>
+  </section>
 
-    <div id="chartContainer">
-    <canvas id="chart" width="400" height="200"></canvas>
-  </div>
+  <!-- UNIVARIATE -->
+  <section>
+    <h2>Univariate Distribution</h2>
+    <div class="controls">
+      <label for="uniVar">Variable:</label>
+      <select id="uniVar">
+        <option value="">-- choose --</option>
+        <option value="Age">Age (numeric)</option>
+        <option value="Gender">Gender (categorical)</option>
+        <option value="Grade">Grade (numeric)</option>
+      </select>
+
+      <button id="computeUni">Compute Univariate</button>
+    </div>
+    <div class="card">
+      <canvas id="uniChart" width="600" height="260"></canvas>
+    </div>
+  </section>
+
+  <!-- BIVARIATE -->
+  <section>
+    <h2>Bivariate Distribution</h2>
+    <div class="controls">
+      <label for="biVar1">Variable 1:</label>
+      <select id="biVar1">
+        <option value="">-- choose --</option>
+        <option value="Age">Age (numeric)</option>
+        <option value="Gender">Gender (categorical)</option>
+        <option value="Grade">Grade (numeric)</option>
+      </select>
+
+      <label for="biVar2">Variable 2:</label>
+      <select id="biVar2">
+        <option value="">-- choose --</option>
+        <option value="Age">Age (numeric)</option>
+        <option value="Gender">Gender (categorical)</option>
+        <option value="Grade">Grade (numeric)</option>
+      </select>
+
+      <button id="computeBi">Compute Bivariate</button>
+    </div>
+    <div class="card">
+      <canvas id="biChart" width="600" height="260"></canvas>
+    </div>
+    <p class="hint">If both variables are numeric → scatter; if one is categorical → grouped bars.</p>
+  </section>
 
   <script>
-    // --- Dataset ---
-    const dataset = [
-      { Name: "Anna", Age: 21, Gender: "F", Grade: 28 },
-      { Name: "Marco", Age: 23, Gender: "M", Grade: 30 },
-      { Name: "Luca", Age: 20, Gender: "M", Grade: 27 },
-      { Name: "Sara", Age: 22, Gender: "F", Grade: 26 },
-      { Name: "Giulia", Age: 21, Gender: "F", Grade: 30 },
-    ];
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.Chart) {
+        alert('Chart.js failed to load.');
+        return;
+      }
 
-    let chartInstance = null;
+      // ---- DATASET ----
+      const data = [
+        { Name: "Anna",  Age: 21, Gender: "F", Grade: 28 },
+        { Name: "Marco", Age: 23, Gender: "M", Grade: 30 },
+        { Name: "Luca",  Age: 20, Gender: "M", Grade: 27 },
+        { Name: "Sara",  Age: 22, Gender: "F", Grade: 26 },
+        { Name: "Giulia",Age: 21, Gender: "F", Grade: 30 },
+      ];
 
-    // --- Compute frequency for univariate variable ---
-    function computeUnivariate(variable) {
-      const freq = {};
-      dataset.forEach(row => {
-        const val = row[variable];
-        freq[val] = (freq[val] || 0) + 1;
-      });
-      return freq;
-    }
+      // Helpers
+      const isNumeric = v => typeof v === 'number';
+      const getCol = (col) => data.map(r => r[col]);
 
-    // --- Compute pairs for bivariate ---
-    function computeBivariate(var1, var2) {
-      return dataset.map(r => ({ x: r[var1], y: r[var2] }));
-    }
+      // ---- UNIVARIATE ----
+      const uniCtx = document.getElementById('uniChart');
+      const biCtx  = document.getElementById('biChart');
+      let uniChart = null, biChart = null;
 
-    // --- Render chart ---
-    function renderChart(data, type, var1, var2) {
-      const ctx = document.getElementById("chart");
-      if (chartInstance) chartInstance.destroy();
+      function computeFrequency(arr){
+        const freq = {};
+        for (const v of arr) freq[v] = (freq[v] || 0) + 1;
+        return freq; // object: value -> count
+      }
 
-      if (type === "univariate") {
-        chartInstance = new Chart(ctx, {
-          type: "bar",
+      function renderUnivariate(variable){
+        const col = getCol(variable);
+        const allNumeric = col.every(v => typeof v === 'number');
+
+        // For simplicity: categorical → bar counts; numeric → bar counts on distinct values (small dataset)
+        const freq = computeFrequency(col);
+        const labels = Object.keys(freq).map(String);
+        const values = Object.values(freq);
+
+        if (uniChart) uniChart.destroy();
+        uniChart = new Chart(uniCtx, {
+          type: 'bar',
           data: {
-            labels: Object.keys(data),
-            datasets: [{
-              label: `${var1} distribution`,
-              data: Object.values(data),
-              backgroundColor: "rgba(54, 162, 235, 0.6)"
-            }]
+            labels,
+            datasets: [{ label: `${variable} distribution`, data: values }]
           },
           options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
-          }
-        });
-      } else {
-        chartInstance = new Chart(ctx, {
-          type: "scatter",
-          data: {
-            datasets: [{
-              label: `${var1} vs ${var2}`,
-              data: data,
-              backgroundColor: "rgba(255, 99, 132, 0.7)"
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: { title: { display: true, text: var1 } },
-              y: { title: { display: true, text: var2 } }
+            scales: { y: { beginAtZero: true } },
+            plugins: {
+              tooltip: { callbacks: { label: (ctx) => `Count: ${ctx.formattedValue}` } }
             }
           }
         });
       }
-    }
 
-    // --- Button handler ---
-    document.getElementById("computeBtn").addEventListener("click", () => {
-      const var1 = document.getElementById("var1").value;
-      const var2 = document.getElementById("var2").value;
+      // ---- BIVARIATE ----
+      function renderBivariate(v1, v2){
+        const col1 = getCol(v1);
+        const col2 = getCol(v2);
+        const num1 = col1.every(v => typeof v === 'number');
+        const num2 = col2.every(v => typeof v === 'number');
 
-      if (!var1) {
-        alert("Please select at least one variable.");
-        return;
+        if (biChart) biChart.destroy();
+
+        // Case 1: numeric-numeric → scatter
+        if (num1 && num2){
+          const points = data.map(r => ({ x: r[v1], y: r[v2] }));
+          biChart = new Chart(biCtx, {
+            type: 'scatter',
+            data: { datasets: [{ label: `${v1} vs ${v2}`, data: points }] },
+            options: {
+              scales: {
+                x: { title: { display: true, text: v1 } },
+                y: { title: { display: true, text: v2 } }
+              }
+            }
+          });
+          return;
+        }
+
+        // Case 2: categorical-numeric → grouped bars
+        // group numeric by category and show mean
+        let catVar, numVar;
+        if (!num1 && num2){ catVar = v1; numVar = v2; }
+        else if (num1 && !num2){ catVar = v2; numVar = v1; }
+        else {
+          // Case 3: categorical-categorical → contingency table (clustered bars)
+          const cats1 = Array.from(new Set(col1));
+          const cats2 = Array.from(new Set(col2));
+          const grid = cats2.map(() => Array(cats1.length).fill(0));
+          data.forEach(r => {
+            const i = cats2.indexOf(r[v2]);
+            const j = cats1.indexOf(r[v1]);
+            grid[i][j] += 1;
+          });
+
+          biChart = new Chart(biCtx, {
+            type: 'bar',
+            data: {
+              labels: cats1,
+              datasets: cats2.map((c, idx) => ({
+                label: String(c),
+                data: grid[idx]
+              }))
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+          });
+          return;
+        }
+
+        // grouped bars (mean by category)
+        const cats = Array.from(new Set(getCol(catVar)));
+        const means = cats.map(c => {
+          const vals = data.filter(r => r[catVar] === c).map(r => r[numVar]);
+          const avg = vals.reduce((a,b)=>a+b,0) / (vals.length || 1);
+          return Number(avg.toFixed(2));
+        });
+
+        biChart = new Chart(biCtx, {
+          type: 'bar',
+          data: {
+            labels: cats.map(String),
+            datasets: [{ label: `Mean ${numVar} by ${catVar}`, data: means }]
+          },
+          options: {
+            scales: { y: { beginAtZero: true } },
+            plugins: {
+              tooltip: { callbacks: { label: (ctx) => `Mean: ${ctx.formattedValue}` } }
+            }
+          }
+        });
       }
 
-      if (var2 === "" || var1 === var2) {
-        const freq = computeUnivariate(var1);
-        renderChart(freq, "univariate", var1);
-      } else {
-        const pairs = computeBivariate(var1, var2);
-        renderChart(pairs, "bivariate", var1, var2);
-      }
+      // Events
+      document.getElementById('computeUni').addEventListener('click', () => {
+        const v = document.getElementById('uniVar').value;
+        if (!v) return alert('Pick a variable for Univariate.');
+        renderUnivariate(v);
+      });
+
+      document.getElementById('computeBi').addEventListener('click', () => {
+        const v1 = document.getElementById('biVar1').value;
+        const v2 = document.getElementById('biVar2').value;
+        if (!v1 || !v2) return alert('Pick two variables for Bivariate.');
+        if (v1 === v2) return alert('Choose two different variables.');
+        renderBivariate(v1, v2);
+      });
     });
   </script>
 
