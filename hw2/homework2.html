@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
   <title>Homework 2 - Distribution</title>
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -18,8 +19,218 @@
 <main>
   <h2>The Concept of Distribution</h2>
   <p>Explain the concept of dataset and distribution using a DBMS and create a simple dataset. Compute the K univariate distribution (k <= 3)</p>
+
+  <h2>Dataset</h2>
+  <p>
+    A <strong>dataset</strong> is a structured collection of related data, usually organized in
+    <strong>tables</strong> that contain <em>rows</em> (records or observations) and <em>columns</em> (variables or attributes).
+    Each column represents a different characteristic, while each row corresponds to one observation or data point.
+  </p>
+
+  <p>
+    In a <strong>Database Management System (DBMS)</strong> such as Microsoft Access, MySQL, or SQLite,
+    datasets are stored as tables that can be queried, filtered, and analyzed using SQL commands.
+    This structure allows efficient data storage, retrieval, and analysis.
+  </p>
+
+  <h2>Example of a simple dataset</h2>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Grade</th>
+    </tr>
+    <tr>
+      <td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td>
+    </tr>
+    <tr>
+      <td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td>
+    </tr>
+    <tr>
+      <td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td>
+    </tr>
+  </table>
+
+  <div class="note">
+    <strong>Observation:</strong> Each row represents one student, while each column represents a variable such as
+    <code>Age</code> or <code>Grade</code>. The entire table is the dataset.
+  </div>
+
+  <h2>Distribution</h2>
+  <p>
+    A <strong>distribution</strong> describes how the values of a variable are <em>spread</em> or <em>arranged</em> within a dataset.
+    It shows how often each value or range of values occurs. Studying the distribution helps us understand
+    patterns, central tendencies, and variability in the data.
+  </p>
+
+  <h2>Types of Distributions</h2>
+
+  <p><strong>Univariate Distribution</strong></p>
+  <p>
+    Focuses on <strong>one variable</strong> at a time. It shows how the values of a single variable
+    (for example, <code>Age</code>) are distributed — which values are more frequent, rare, or central.
+  </p>
+  <p>
+    Example: If most students are aged 21–23, the univariate distribution of <code>Age</code>
+    will peak around that range.
+  </p>
+
+  <p><strong>Bivariate Distribution</strong></p>
+  <p>
+    Focuses on two variables simultaneously to explore relationships or correlations between them.
+    For example, analyzing <code>Age</code> and <code>Grade</code> together might reveal whether older students
+    tend to achieve higher grades.
+  </p>
+
+  <h2>Why These Concepts Matter</h2>
+  <ul>
+    <li>They help summarize large amounts of data.</li>
+    <li>They make it easier to visualize trends and relationships.</li>
+    <li>They are the foundation for statistical and probabilistic analysis.</li>
+  </ul>
+  <h2>Query Distributions</h2>
+  <p>Select one variable for a <strong>univariate</strong> distribution, or two for a <strong>bivariate</strong> analysis.</p>
+
+  <div>
+    <label for="var1">Variable 1:</label>
+    <select id="var1">
+      <option value="">-- choose --</option>
+      <option value="Age">Age</option>
+      <option value="Gender">Gender</option>
+      <option value="Grade">Grade</option>
+    </select>
+
+    <label for="var2">Variable 2:</label>
+    <select id="var2">
+      <option value="">-- none --</option>
+      <option value="Age">Age</option>
+      <option value="Gender">Gender</option>
+      <option value="Grade">Grade</option>
+    </select>
+
+    <button id="computeBtn">Compute Distribution</button>
+  </div>
+
+  <div id="chartContainer">
+    <canvas id="chart"></canvas>
+  </div>
+  
+  <h1>Interactive Dataset and Distributions</h1>
+
+  <p>
+    This interactive demo uses a small dataset stored in JavaScript.
+    You can compute and visualize univariate or bivariate distributions using Chart.js.
+  </p>
+
+  <h2>Dataset</h2>
+  <table>
+    <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Grade</th></tr>
+    <tr><td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td></tr>
+    <tr><td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td></tr>
+    <tr><td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td></tr>
+    <tr><td>4</td><td>Sara</td><td>22</td><td>F</td><td>26</td></tr>
+    <tr><td>5</td><td>Giulia</td><td>21</td><td>F</td><td>30</td></tr>
+  </table>
+
+    <div id="chartContainer">
+    <canvas id="chart" width="400" height="200"></canvas>
+  </div>
+
+  <script>
+    // --- Dataset ---
+    const dataset = [
+      { Name: "Anna", Age: 21, Gender: "F", Grade: 28 },
+      { Name: "Marco", Age: 23, Gender: "M", Grade: 30 },
+      { Name: "Luca", Age: 20, Gender: "M", Grade: 27 },
+      { Name: "Sara", Age: 22, Gender: "F", Grade: 26 },
+      { Name: "Giulia", Age: 21, Gender: "F", Grade: 30 },
+    ];
+
+    let chartInstance = null;
+
+    // --- Compute frequency for univariate variable ---
+    function computeUnivariate(variable) {
+      const freq = {};
+      dataset.forEach(row => {
+        const val = row[variable];
+        freq[val] = (freq[val] || 0) + 1;
+      });
+      return freq;
+    }
+
+    // --- Compute pairs for bivariate ---
+    function computeBivariate(var1, var2) {
+      return dataset.map(r => ({ x: r[var1], y: r[var2] }));
+    }
+
+    // --- Render chart ---
+    function renderChart(data, type, var1, var2) {
+      const ctx = document.getElementById("chart");
+      if (chartInstance) chartInstance.destroy();
+
+      if (type === "univariate") {
+        chartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: Object.keys(data),
+            datasets: [{
+              label: `${var1} distribution`,
+              data: Object.values(data),
+              backgroundColor: "rgba(54, 162, 235, 0.6)"
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      } else {
+        chartInstance = new Chart(ctx, {
+          type: "scatter",
+          data: {
+            datasets: [{
+              label: `${var1} vs ${var2}`,
+              data: data,
+              backgroundColor: "rgba(255, 99, 132, 0.7)"
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: { title: { display: true, text: var1 } },
+              y: { title: { display: true, text: var2 } }
+            }
+          }
+        });
+      }
+    }
+
+    // --- Button handler ---
+    document.getElementById("computeBtn").addEventListener("click", () => {
+      const var1 = document.getElementById("var1").value;
+      const var2 = document.getElementById("var2").value;
+
+      if (!var1) {
+        alert("Please select at least one variable.");
+        return;
+      }
+
+      if (var2 === "" || var1 === var2) {
+        const freq = computeUnivariate(var1);
+        renderChart(freq, "univariate", var1);
+      } else {
+        const pairs = computeBivariate(var1, var2);
+        renderChart(pairs, "bivariate", var1, var2);
+      }
+    });
+  </script>
+
   <p>========================================================================================================================================</p>
+  
   <h2>Distribution application in Ceaser Chiper</h2>
+  
   <p>Take a text and compute the distribution of the letters</p>
   <p>Apply a Ceaser Cipher (with random shift)</p>
   <p>Decode the encrypted text using the language distribution</p>
