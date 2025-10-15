@@ -22,66 +22,82 @@
 
   <h2>Dataset</h2>
   <p>
-    A <strong>dataset</strong> is a structured collection of related data, usually organized in
-    <strong>tables</strong> that contain <em>rows</em> (records or observations) and <em>columns</em> (variables or attributes).
+    A dataset is a structured collection of related data, usually organized in
+    tables that contain rows (records or observations) and columns (variables or attributes).
     Each column represents a different characteristic, while each row corresponds to one observation or data point.
   </p>
 
   <p>
-    In a <strong>Database Management System (DBMS)</strong> such as Microsoft Access, MySQL, or SQLite,
+    In a Database Management System (DBMS) such as Microsoft Access, MySQL, or SQLite,
     datasets are stored as tables that can be queried, filtered, and analyzed using SQL commands.
     This structure allows efficient data storage, retrieval, and analysis.
   </p>
 
   <h2>Example of a simple dataset</h2>
-  <table>
+  <table cellspacing="0" cellpadding="6" 
+  style="border-collapse: collapse; text-align: center; font-family: sans-serif; color: white; background-color: transparent;">
+  <thead>
+    <tr style="background-color: transparent;">
+      <th style="border: 1px solid white;">ID</th>
+      <th style="border: 1px solid white; text-align:left;">Name</th>
+      <th style="border: 1px solid white;">Age</th>
+      <th style="border: 1px solid white;">Gender</th>
+      <th style="border: 1px solid white; text-align:right;">Grade</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Gender</th>
-      <th>Grade</th>
+      <td style="border: 1px solid white;">1</td>
+      <td style="border: 1px solid white; text-align:left;">Anna</td>
+      <td style="border: 1px solid white;">21</td>
+      <td style="border: 1px solid white;">F</td>
+      <td style="border: 1px solid white; text-align:right;">28</td>
+    </tr>
+    <tr style="background-color: transparent;">
+      <td style="border: 1px solid white;">2</td>
+      <td style="border: 1px solid white; text-align:left;">Marco</td>
+      <td style="border: 1px solid white;">23</td>
+      <td style="border: 1px solid white;">M</td>
+      <td style="border: 1px solid white; text-align:right;">30</td>
     </tr>
     <tr>
-      <td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td>
+      <td style="border: 1px solid white;">3</td>
+      <td style="border: 1px solid white; text-align:left;">Luca</td>
+      <td style="border: 1px solid white;">20</td>
+      <td style="border: 1px solid white;">M</td>
+      <td style="border: 1px solid white; text-align:right;">27</td>
     </tr>
-    <tr>
-      <td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td>
-    </tr>
-    <tr>
-      <td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td>
-    </tr>
-  </table>
+  </tbody>
+  <tfoot>
+  </tfoot>
+</table>
+
 
   <div class="note">
-    <strong>Observation:</strong> Each row represents one student, while each column represents a variable such as
-    <code>Age</code> or <code>Grade</code>. The entire table is the dataset.
+    <br><strong>Observation:</strong> Each row represents one student, while each column represents a variable such as
+    Age or Grade. The entire table is the dataset.
   </div>
 
   <h2>Distribution</h2>
   <p>
-    A <strong>distribution</strong> describes how the values of a variable are <em>spread</em> or <em>arranged</em> within a dataset.
-    It shows how often each value or range of values occurs. Studying the distribution helps us understand
-    patterns, central tendencies, and variability in the data.
+    A distribution describes how the values of a variable are spread or arranged within a dataset. It shows how often each value or range of values occurs. 
+    Studying the distribution helps us understand patterns, central tendencies, and variability in the data.
   </p>
 
   <h2>Types of Distributions</h2>
 
   <p><strong>Univariate Distribution</strong></p>
   <p>
-    Focuses on <strong>one variable</strong> at a time. It shows how the values of a single variable
-    (for example, <code>Age</code>) are distributed — which values are more frequent, rare, or central.
+    Focuses on one variable at a time. It shows how the values of a single variable (for example, Age) are distributed — which values are more frequent, rare, or central.
   </p>
   <p>
-    Example: If most students are aged 21–23, the univariate distribution of <code>Age</code>
-    will peak around that range.
+    Example: If most students are aged 21–23, the univariate distribution of Age will peak around that range.
   </p>
 
   <p><strong>Bivariate Distribution</strong></p>
   <p>
-    Focuses on two variables simultaneously to explore relationships or correlations between them.
-    For example, analyzing <code>Age</code> and <code>Grade</code> together might reveal whether older students
-    tend to achieve higher grades.
+    Focuses on two variables simultaneously to explore relationships or correlations between them. For example, analyzing Age and Grade together might reveal whether older 
+    students tend to achieve higher grades.
   </p>
 
   <h2>Why These Concepts Matter</h2>
@@ -94,28 +110,67 @@
   <h2>Interactive Dataset and Distributions</h2>
 
   <p>
-    This interactive demo uses a small dataset stored in JavaScript.
-    You can compute and visualize univariate or bivariate distributions using Chart.js.
+  This interactive demo uses a small dataset created and stored using the MariaDB Database Management System (DBMS).
+  Below you can find the SQL instructions used to create and populate the table that contains the dataset.
   </p>
 
+<div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;">
+  <p>SQL Script — Create and Populate Dataset</p>
+  <pre>
+  -- 1 Create the database
+  CREATE DATABASE IF NOT EXISTS school_db;
+  USE school_db;
+
+  -- 2 Create the table "students"
+  CREATE TABLE students (ID INT PRIMARY KEY AUTO_INCREMENT, Name VARCHAR(50) NOT NULL, Age INT NOT NULL, Gender CHAR(1) NOT NULL,Grade INT NOT NULL);
+
+  -- 3 Insert sample data
+  INSERT INTO students (Name, Age, Gender, Grade) VALUES ('Anna', 23, 'F', 29),('Marco', 23, 'M', 30),('Luca', 20, 'M', 27),('Sara', 22, 'F', 26),
+  ('Giulia', 21, 'F', 30),('Matteo', 24, 'M', 25),('Elena', 22, 'F', 29),('Davide', 23, 'M', 31), ('Chiara', 20, 'F', 27),('Alessio', 22, 'M', 26),
+  ('Francesca', 23, 'F', 29),('Giorgio', 21, 'M', 29), ('Martina', 20, 'F', 30),('Simone', 24, 'M', 25),('Beatrice', 22, 'F', 27),
+  ('Federico', 21, 'M', 28),('Laura', 23, 'F', 29),('Riccardo', 22, 'M', 30),('Veronica', 20, 'F', 26),('Paolo', 24, 'M', 27);
+  </pre>
+</div>
   <section>
     <h2>Dataset</h2>
+    
     <div class="card">
-      <table>
+    <p class="equal-line">================================================================================================================================</p>
+       <table>
         <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Grade</th></tr>
-        <tr><td>1</td><td>Anna</td><td>21</td><td>F</td><td>28</td></tr>
+        <tr><td>1</td><td>Anna</td><td>23</td><td>F</td><td>29</td></tr>
         <tr><td>2</td><td>Marco</td><td>23</td><td>M</td><td>30</td></tr>
         <tr><td>3</td><td>Luca</td><td>20</td><td>M</td><td>27</td></tr>
         <tr><td>4</td><td>Sara</td><td>22</td><td>F</td><td>26</td></tr>
         <tr><td>5</td><td>Giulia</td><td>21</td><td>F</td><td>30</td></tr>
+        <tr><td>6</td><td>Matteo</td><td>24</td><td>M</td><td>25</td></tr>
+        <tr><td>7</td><td>Elena</td><td>22</td><td>F</td><td>29</td></tr>
+        <tr><td>8</td><td>Davide</td><td>23</td><td>M</td><td>31</td></tr>
+        <tr><td>9</td><td>Chiara</td><td>20</td><td>F</td><td>27</td></tr>
+        <tr><td>10</td><td>Alessio</td><td>22</td><td>M</td><td>26</td></tr>
+        <tr><td>11</td><td>Francesca</td><td>23</td><td>F</td><td>29</td></tr>
+        <tr><td>12</td><td>Giorgio</td><td>21</td><td>M</td><td>29</td></tr>
+        <tr><td>13</td><td>Martina</td><td>20</td><td>F</td><td>30</td></tr>
+        <tr><td>14</td><td>Simone</td><td>24</td><td>M</td><td>25</td></tr>
+        <tr><td>15</td><td>Beatrice</td><td>22</td><td>F</td><td>27</td></tr>
+        <tr><td>16</td><td>Federico</td><td>21</td><td>M</td><td>28</td></tr>
+        <tr><td>17</td><td>Laura</td><td>23</td><td>F</td><td>29</td></tr>
+        <tr><td>18</td><td>Riccardo</td><td>22</td><td>M</td><td>30</td></tr>
+        <tr><td>19</td><td>Veronica</td><td>20</td><td>F</td><td>26</td></tr>
+        <tr><td>20</td><td>Paolo</td><td>24</td><td>M</td><td>27</td></tr>
       </table>
+      <p class="equal-line">================================================================================================================================</p>
       <p class="hint">Rows = observations, columns = variables.</p>
     </div>
   </section>
+  <div class="sections-container">
 
   <!-- UNIVARIATE -->
-  <section>
+  <section class="analysis-card">
     <h2>Univariate Distribution</h2>
+    <div class="card">
+      <canvas id="uniChart" width="600" height="260"></canvas>
+    </div>
     <div class="controls">
       <label for="uniVar">Variable:</label>
       <select id="uniVar">
@@ -124,17 +179,31 @@
         <option value="Gender">Gender (categorical)</option>
         <option value="Grade">Grade (numeric)</option>
       </select>
-
       <button id="computeUni">Compute Univariate</button>
     </div>
-    <div class="card">
-      <canvas id="uniChart" width="600" height="260"></canvas>
+      <br>
+      <br>
+      <br>
+      <br>
+      <p>
+       A univariate distribution focuses on a single variable and shows how its values are distributed within a dataset.
+        In this example, we analyze the variable Age from the students table. The query below counts how many students 
+        belong to each age group. This result can be visualized as a bar chart, where the X-axis represents the age and 
+        the Y-axis the frequency. 
+      </p>
+    <div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;">
+      <p>SQL Query — Univariate Distribution (Age)</p> 
+      SELECT Age, COUNT(*) AS Frequency FROM students GROUP BY Age ORDER BY Age;
     </div>
   </section>
 
   <!-- BIVARIATE -->
-  <section>
+  <section class="analysis-card">
     <h2>Bivariate Distribution</h2>
+    <div class="card">
+      <canvas id="biChart" width="600" height="260"></canvas>
+    </div>
+
     <div class="controls">
       <label for="biVar1">Variable 1:</label>
       <select id="biVar1">
@@ -151,174 +220,89 @@
         <option value="Gender">Gender (categorical)</option>
         <option value="Grade">Grade (numeric)</option>
       </select>
-
       <button id="computeBi">Compute Bivariate</button>
     </div>
-    <div class="card">
-      <canvas id="biChart" width="600" height="260"></canvas>
+    <br>
+    <p>(Gender data are converted to 0 for Ladies and 1 for Gentlemen)</p>
+    <p> 
+      A bivariate distribution analyzes the relationship between two variables simultaneously. In this example, we examine 
+      the connection between Age and Grade from the students table. The SQL query below groups the data by both columns and
+      counts how many students share each combination of age and grade. The result can be visualized as a scatter plot 
+      (or bubble chart), where: 
+      <ul> 
+        <li>
+          The X-axis represents Age
+        </li> 
+        <li>
+          The Y-axis represents Grade
+        </li> 
+        <li>
+          The bubble size shows the Frequency of that combination
+        </li> 
+        </ul> 
+    </p> 
+    <div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;"> 
+      <p>SQL Query — Bivariate Distribution (Age vs Grade)</p> 
+      SELECT Age, Grade, COUNT(*) AS Frequency FROM students GROUP BY Age, Grade ORDER BY Age, Grade;
     </div>
-    <p class="hint">If both variables are numeric → scatter; if one is categorical → grouped bars.</p>
   </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!window.Chart) {
-        alert('Chart.js failed to load.');
-        return;
-      }
+</div>
 
-      // ---- DATASET ----
-      const data = [
-        { Name: "Anna",  Age: 21, Gender: "F", Grade: 28 },
-        { Name: "Marco", Age: 23, Gender: "M", Grade: 30 },
-        { Name: "Luca",  Age: 20, Gender: "M", Grade: 27 },
-        { Name: "Sara",  Age: 22, Gender: "F", Grade: 26 },
-        { Name: "Giulia",Age: 21, Gender: "F", Grade: 30 },
-      ];
-
-      // Helpers
-      const isNumeric = v => typeof v === 'number';
-      const getCol = (col) => data.map(r => r[col]);
-
-      // ---- UNIVARIATE ----
-      const uniCtx = document.getElementById('uniChart');
-      const biCtx  = document.getElementById('biChart');
-      let uniChart = null, biChart = null;
-
-      function computeFrequency(arr){
-        const freq = {};
-        for (const v of arr) freq[v] = (freq[v] || 0) + 1;
-        return freq; // object: value -> count
-      }
-
-      function renderUnivariate(variable){
-        const col = getCol(variable);
-        const allNumeric = col.every(v => typeof v === 'number');
-
-        // For simplicity: categorical → bar counts; numeric → bar counts on distinct values (small dataset)
-        const freq = computeFrequency(col);
-        const labels = Object.keys(freq).map(String);
-        const values = Object.values(freq);
-
-        if (uniChart) uniChart.destroy();
-        uniChart = new Chart(uniCtx, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{ label: `${variable} distribution`, data: values }]
-          },
-          options: {
-            scales: { y: { beginAtZero: true } },
-            plugins: {
-              tooltip: { callbacks: { label: (ctx) => `Count: ${ctx.formattedValue}` } }
-            }
-          }
-        });
-      }
-
-      // ---- BIVARIATE ----
-      function renderBivariate(v1, v2){
-        const col1 = getCol(v1);
-        const col2 = getCol(v2);
-        const num1 = col1.every(v => typeof v === 'number');
-        const num2 = col2.every(v => typeof v === 'number');
-
-        if (biChart) biChart.destroy();
-
-        // Case 1: numeric-numeric → scatter
-        if (num1 && num2){
-          const points = data.map(r => ({ x: r[v1], y: r[v2] }));
-          biChart = new Chart(biCtx, {
-            type: 'scatter',
-            data: { datasets: [{ label: `${v1} vs ${v2}`, data: points }] },
-            options: {
-              scales: {
-                x: { title: { display: true, text: v1 } },
-                y: { title: { display: true, text: v2 } }
-              }
-            }
-          });
-          return;
-        }
-
-        // Case 2: categorical-numeric → grouped bars
-        // group numeric by category and show mean
-        let catVar, numVar;
-        if (!num1 && num2){ catVar = v1; numVar = v2; }
-        else if (num1 && !num2){ catVar = v2; numVar = v1; }
-        else {
-          // Case 3: categorical-categorical → contingency table (clustered bars)
-          const cats1 = Array.from(new Set(col1));
-          const cats2 = Array.from(new Set(col2));
-          const grid = cats2.map(() => Array(cats1.length).fill(0));
-          data.forEach(r => {
-            const i = cats2.indexOf(r[v2]);
-            const j = cats1.indexOf(r[v1]);
-            grid[i][j] += 1;
-          });
-
-          biChart = new Chart(biCtx, {
-            type: 'bar',
-            data: {
-              labels: cats1,
-              datasets: cats2.map((c, idx) => ({
-                label: String(c),
-                data: grid[idx]
-              }))
-            },
-            options: { scales: { y: { beginAtZero: true } } }
-          });
-          return;
-        }
-
-        // grouped bars (mean by category)
-        const cats = Array.from(new Set(getCol(catVar)));
-        const means = cats.map(c => {
-          const vals = data.filter(r => r[catVar] === c).map(r => r[numVar]);
-          const avg = vals.reduce((a,b)=>a+b,0) / (vals.length || 1);
-          return Number(avg.toFixed(2));
-        });
-
-        biChart = new Chart(biCtx, {
-          type: 'bar',
-          data: {
-            labels: cats.map(String),
-            datasets: [{ label: `Mean ${numVar} by ${catVar}`, data: means }]
-          },
-          options: {
-            scales: { y: { beginAtZero: true } },
-            plugins: {
-              tooltip: { callbacks: { label: (ctx) => `Mean: ${ctx.formattedValue}` } }
-            }
-          }
-        });
-      }
-
-      // Events
-      document.getElementById('computeUni').addEventListener('click', () => {
-        const v = document.getElementById('uniVar').value;
-        if (!v) return alert('Pick a variable for Univariate.');
-        renderUnivariate(v);
-      });
-
-      document.getElementById('computeBi').addEventListener('click', () => {
-        const v1 = document.getElementById('biVar1').value;
-        const v2 = document.getElementById('biVar2').value;
-        if (!v1 || !v2) return alert('Pick two variables for Bivariate.');
-        if (v1 === v2) return alert('Choose two different variables.');
-        renderBivariate(v1, v2);
-      });
-    });
-  </script>
-
-  <p>========================================================================================================================================</p>
   
-  <h2>Distribution application in Ceaser Chiper</h2>
+
+  <p class="equal-line">================================================================================================================================</p>
+
+  <h2>Caesar Cipher Challenge</h2>
+  <p>The frequency distribution of letters can reveal hidden patterns in text. This principle is used to break simple substitution ciphers like the Caesar cipher. 
+     In natural language text letters do not appear with the same frequency:<br>
+     <ul class="freq-list">
+        <li>English: E, T, A, O, I, N, S, H, R...</li>
+        <li>Italian: E, A, I, O, N, L, R, T, S...</li>
+    </ul>
+     By observing this distribution, you can identify the most common letters and use them as clues to decrypt an encoded message.
+     By typing the short encoded text into the box below and observing the resulting histogram, you can check which letter appears 
+     most frequently and try substitution to decode the message:
+  </p>
+
+  <div class="card" style="text-align:center;">
+    <p id="cipherText"></p>
+  </div>
   
-  <p>Take a text and compute the distribution of the letters</p>
-  <p>Apply a Ceaser Cipher (with random shift)</p>
-  <p>Decode the encrypted text using the language distribution</p>
-  
+  <section class="cipher-section">
+   <div class="cipher-layout">
+    <!-- Box sinistro: input testo -->
+    <div class="cipher-box">
+      <h2>Letter Frequency</h2>
+      <textarea id="plainText" rows="8" cols="50" placeholder="Type or paste text here..."></textarea><br>
+      <button id="analyzeText">Analyze</button>
+    </div>
+
+    <!-- Box destro: grafico -->
+    <div class="cipher-box">
+      <canvas id="freqChart" width="900" height="400"></canvas>
+    </div>
+  </div>
+  </section>
+
+
+  <hr>
+
+  <!-- Sezione cifrario di Cesare -->
+  <div class="card" style="text-align:center;">
+    <h2>Caesar Cipher Challenge</h2>
+    <p id="cipherText"></p>
+    <label for="shiftGuess">Your shift guess:</label>
+    <input type="number" id="shiftGuess" min="0" max="25" style="width:60px;">
+    <button id="tryDecode">Decode</button>
+  </div>
+
+  <div class="card">
+    <h2>Decoded text:</h2>
+    <textarea id="decodedOutput" rows="2" cols="80" readonly></textarea>
+  </div>
+
+
   <!-- Pulsante back -->
   <div class="mt-4 text-center">
     <a href="../index.html" class="btn btn-primary">← Back to Home</a>
@@ -330,6 +314,8 @@
   <p><small>&copy; 2025 Francesco – Homework 1</small></p>
 </footer>
 
+  <script src="js/univariate.js"></script>
+  <script src="js/bivariate.js"></script>
+  <script src="js/cipher.js"></script>
 </body>
 </html>
-

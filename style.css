@@ -82,3 +82,198 @@ footer {
 footer hr {
   border-color: #333;
 }
+
+.card {
+  background-color: transparent !important;
+  color: white; /* testo chiaro per sfondo scuro */
+  border: 0px solid white; /* opzionale: bordo visibile */
+  box-shadow: none; /* rimuove eventuale ombra bianca */
+}
+
+.sections-container {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap; /* le rende responsive */
+}
+
+.analysis-card {
+  flex: 1 1 45%; /* 45% della larghezza, così ne entrano due affiancate */
+  max-width: 600px;
+  background-color: transparent;
+  border: 0px solid white;
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.analysis-card h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+/* Grafici */
+.analysis-card .card {
+  background-color: transparent;
+  border: 0px solid white;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Controlli */
+.analysis-card .controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+button {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: white;
+  color: black;
+}
+
+.equal-line {
+  color: white;               /* testo bianco per sfondo nero */
+  font-family: monospace;     /* carattere uniforme */
+  font-size: 1rem;
+  letter-spacing: 2px;        /* spazio fra i segni “=” */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  white-space: nowrap;        /* evita che vada a capo */
+  overflow: hidden;
+  width: 100%;
+}
+
+textarea, input[type=number] {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+.analysis-card h3, .analysis-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+#cipherText {
+  font-family: monospace;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+  color: #00e0ff;
+}
+
+#decodedOutput {
+  width: 100%;
+}
+
+/* ———— SEZIONE CIPHERS ———— */
+.cipher-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: white;
+  text-align: center;
+}
+
+.cipher-section h2 {
+  margin-bottom: 0.5rem;
+}
+
+.cipher-section p {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  line-height: 1.5;
+}
+
+/* Layout principale: due box affiancati */
+.cipher-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap; /* 🔹 per schermi piccoli */
+}
+
+/* Ogni box (testo o grafico) */
+.cipher-box {
+  flex: 1 1 45%;
+  min-width: 350px;
+  max-width: 600px;
+  background-color: transparent;
+  border: 0px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Textarea e bottone */
+.cipher-box textarea {
+  width: 100%;
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-family: monospace;
+}
+
+.cipher-box button {
+  margin-top: 0.5rem;
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cipher-box button:hover {
+  background: white;
+  color: black;
+}
+
+/* Canvas responsive */
+.cipher-box canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Mobile: impila i box uno sopra l’altro */
+@media (max-width: 800px) {
+  .cipher-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cipher-box {
+    max-width: 90%;
+  }
+}
+
+
