@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 4 - Law Large Number</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 4</h1>
+  <p class="lead">Law of Large Numbers (LLN)</p>
+</header>
+
+<main>
+  <h2>Law of Large Numbers</h2>
+  <p>
+    The <strong>Law of Large Numbers</strong> states that as the number of independent, identically
+    distributed trials increases, the <strong>observed frequencies</strong> and <strong>sample averages</strong>
+    stabilize around their <strong>true</strong> (theoretical) values.
+  </p>
+  <h2>Frequency Convergence</h2>
+  <p>
+    If <em>f<sub>n</sub></em> is the observed frequency of an event after <em>n</em> trials and <em>p</em> is the
+    true probability, then:
+  </p>
+  <p style="text-align:center;">
+    \( f_n \longrightarrow p \quad \text{as } n \to \infty \)
+  </p>
+
+  <h2>Empirical Mean vs. Theoretical Mean</h2>
+  <p>
+    Let \(X_1, X_2, \ldots, X_n\) be i.i.d. random variables with expected value \(E[X_i] = \mu\).
+    The empirical mean is:
+  </p>
+  <p style="text-align:center;">
+    \( \mu_n = \frac{1}{n}\sum_{i=1}^n X_i \)
+  </p>
+  <p style="text-align:center;">
+    \( \mu_n \longrightarrow \mu \)
+  </p>
+  
+  <h2>Why Frequency Is a Mean</h2>
+  <p>
+    Define \(X_i = 1\) if the event occurs in trial <em>i</em>, and \(X_i = 0\) otherwise.
+    Then the frequency is just the average of these 0–1 outcomes:
+  </p>
+  <p style="text-align:center;">
+    \( f_n = \frac{1}{n}\sum_{i=1}^n X_i = \mu_n \)
+  </p>
+
+  <section>
+  <div class="card">
+    <p class="equal-line">================================================================================================================================</p>
+    
+    </div>
+  </section>
+  <div class="sections-container">
+
+  <!-- LGN -->
+  <section class="analysis-card">
+    <h2>LLN</h2>
+    <div class="card">
+    <canvas id="LGN" width="600" height="460"></canvas>
+    </div> 
+  </section>
+
+  <!-- Gaussiana -->
+  <section class="analysis-card">
+    <h2>Mean</h2>
+    <div class="card">
+    <canvas id="Gauss" width="600" height="460"></canvas>
+    </div>
+  </section>
+
+  <div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;">
+  <div class="controls text-center">
+    <label for="attempt" class="me-2"><strong>Attempts:</strong></label>
+    <select id="attempt" class="form-select form-select-sm d-inline-block" style="width: 110px;">
+      <option value="">-- choose --</option>
+      <option value="10">10</option>
+      <option value="100">100</option>
+      <option value="1000">1000</option>
+      <option value="10000">10000</option> 
+    </select>
+
+    <label for="probInput" class="ms-3 me-2"><strong>probability:</strong></label>
+    <input type="number" id="probInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="0.5" min="0.1" max="1" step="0.1">
+
+    <label for="stepsInput" class="ms-3 me-2"><strong>Steps:</strong></label>
+    <input type="number" id="stepsInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="50" min="1" max="100" step="1">
+  </div>
+</div>
+
+  </div>
+</div>
+ <p class="equal-line">================================================================================================================================</p>
+
+  <!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 4</small></p>
+</footer>
+
+  <script src="js/lgn.js"></script>
+  <script src="js/gauss.js"></script>
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

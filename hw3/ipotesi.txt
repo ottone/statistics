@@ -1,0 +1,25 @@
+parliamo di RSA:  
+
+Scelti p e q coprimi, calcolo N = p  *  q e fi(N)=(p-1)*(q-1), scelgo un M (nel nostro caso una lettera dell'alfabeto, A-Z e il carattere spazio) e cifro un testo lettera per lettera. Le lettere da cifrare devono essereconvertite prima in numeri. Molto importante per la riuscita il teorema di Eulero dice che :
+M^φ(N) ≡ 1 mod N   (se M e N sono coprimi), quindi i token scelti per la  conversione delle lettere dovranno essere coprimi  con N (N=p*q).
+
+Per definizione, la cifratura di M è: C = M^e mod N
+
+A me interessa recuperare (decodifichiamo) M a partire da C: C^(e^-1) = M mod N 
+=> M^e = C mod N
+
+Sappiamo che, per definizione:  d = (e^-1) mod φ(N)
+
+cioè  : e * d = 1 + k * φ(N)   per un intero k
+
+Poiché abbiamo e * d, facciamo comparire e * d nel primo termine elevando entrambi i membri alla potenza d: M^(e * d) = C^d mod N  
+
+Ora che abbiamo fatto comparire e * d, possiamo sostituire il suo valore:
+
+M^(1 + k * φ(N)) = C^d mod N , che si riscrive come: M * (M^φ(N))^k = C^d mod N
+
+Ora, per il Teorema di Eulero - che ci dice M^φ(N) ≡ 1 mod N  se M e N sono coprimi - abbiamo:
+
+M^φ(N) ≡ 1 mod N e quindi anche (M^φ(N))^k ≡ 1 mod N
+
+Ne segue che la decodifica e' : M = C^d mod N

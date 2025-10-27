@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 4 - Law Large Number</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 4</h1>
+  <p class="lead">Law of Large Numbers (LLN)</p>
+</header>
+
+<main>
+  <section>
+  <div class="card">
+    <p class="equal-line">================================================================================================================================</p>
+    
+    </div>
+  </section>
+  <div class="sections-container">
+
+  <!-- LGN -->
+  <section class="analysis-card">
+    <h2>LLN</h2>
+    <div class="card">
+    <canvas id="LGN" width="600" height="460"></canvas>
+    </div> 
+  </section>
+
+  <!-- Gaussiana -->
+  <section class="analysis-card">
+    <h2>Mean</h2>
+    <div class="card">
+    <canvas id="Gauss" width="600" height="460"></canvas>
+    </div>
+  </section>
+
+  <div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;">
+  <div class="controls text-center">
+    <label for="attempt" class="me-2"><strong>Attempts:</strong></label>
+    <select id="attempt" class="form-select form-select-sm d-inline-block" style="width: 110px;">
+      <option value="">-- choose --</option>
+      <option value="10">10</option>
+      <option value="100">100</option>
+      <option value="1000">1000</option>
+      <option value="10000">10000</option> 
+    </select>
+
+    <label for="probInput" class="ms-3 me-2"><strong>probability:</strong></label>
+    <input type="number" id="probInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="0.5" min="0.1" max="1" step="0.1">
+
+    <label for="stepsInput" class="ms-3 me-2"><strong>Steps:</strong></label>
+    <input type="number" id="stepsInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="50" min="1" max="100" step="1">
+  </div>
+</div>
+
+  </div>
+</div>
+ <p class="equal-line">================================================================================================================================</p>
+
+<!-- Algorithm, Theory, and User Interaction Explanation -->
+<section class="card my-4 p-4" style="background-color:#f8f9fa; border-radius:12px;">
+  <h2 class="text-center mb-3">🧮 Algorithm Description</h2>
+
+  <p>
+    The <strong>Law of Large Numbers (LLN)</strong> is a fundamental theorem in probability stating that, 
+    as the number of independent and identically distributed trials increases, 
+    the <em>empirical average</em> (or observed frequency) converges to the <em>expected value</em> of the random variable.  
+  </p>
+
+  <p>
+    In other words, if an experiment with probability of success p is repeated n times, 
+    the proportion of observed successes fₙ = Sₙ / n tends to the theoretical probability p as n → ∞.  
+    This expresses the <strong>probabilistic limit</strong>:
+  </p>
+  <pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px; text-align:center;">
+lim (n → ∞) (Sₙ / n) = p
+  </pre>
+
+  <p>
+    The LLN formalizes how randomness becomes predictable when averaged over a large number of trials.  
+    This simulation provides an <strong>interactive visualization</strong> of that phenomenon through multiple <em>random walks</em>, 
+    each representing a sequence of Bernoulli trials (success/failure experiments).
+  </p>
+
+  <hr>
+
+  <h2>1️⃣  User Interaction</h2>
+  <p>
+    Users can explore this convergence by adjusting three key parameters:
+  </p>
+  <ul>
+    <li><strong>Attempts:</strong> number of independent random walks (statistical samples).</li>
+    <li><strong>Probability (p):</strong> probability of success in each step (1 = success, 0 = failure).</li>
+    <li><strong>Steps:</strong> number of trials per walk (sample size).</li>
+  </ul>
+  <p>
+    Changing any of these parameters triggers a real-time update of both charts:
+  </p>
+  <pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+attemptSelect.addEventListener("change", runSimulation);
+probInput.addEventListener("change", () => { PROB = parseFloat(probInput.value); runSimulation(); });
+stepsInput.addEventListener("change", () => { STEPS = parseInt(stepsInput.value); runSimulation(); });
+  </pre>
+
+  <hr>
+
+  <h2>2️⃣ Random Walk Generation</h2>
+  
+  <pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+x += 1;               // move right for every trial
+if (rand &lt; PROB) y += 1;   // move up only if success occurs
+  </pre>
+  <p>
+    The result is a two-dimensional path where the horizontal axis (<strong>X</strong>) represents total trials 
+    and the vertical axis (<strong>Y</strong>) represents cumulative successes.  
+    As the number of steps increases, the average slope of each line tends to stabilize around the true probability p.
+  </p>
+
+  <hr>
+
+  <h2>3️⃣ Independent Randomness (Seeded Generator)</h2>
+  <p>
+  Each random walk simulates a sequence of trials, where each step represents a single experiment with probability p of success.
+  For every trial, the algorithm updates the position as follows:
+</p>
+
+<pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+const rand = Math.random();      // generates a random value between 0 and 1
+const step = rand &lt; PROB ? 1 : 0;
+
+x += 1;                          // move right for each trial
+if (step === 1) y += 1;          // move up only if success occurs
+points.push({ x, y });
+</pre>
+
+<p>
+  The Math.random() function provides uniform randomness for each step,
+  meaning every walk is statistically independent and unpredictable.
+  No seeded generator is used — each run produces unique random trajectories.
+</p>
+
+<p>
+  As a result, the <strong>X axis</strong> represents the number of total trials (failures + successes),
+  while the <strong>Y axis</strong> represents the cumulative number of successes.
+  The plotted lines show the random paths that individual experiments follow over time.
+</p>
+
+<p class="mb-0">
+  When the number of attempts increases, the paths begin to cluster around a common average line,
+  visually demonstrating the <strong>Law of Large Numbers</strong>:
+  the empirical mean of the outcomes converges toward the true probability \( p \).
+</p>
+
+  <hr>
+
+  <h2>4️⃣ Dynamic Visualization</h2>
+  <p>
+    The simulation uses Chart.js to display each walk as a <strong>stepped line</strong> 
+    (horizontal for failures, vertical for successes):
+  </p>
+  <pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+datasets.push({
+  data: walk,
+  borderColor: randomColor(i),
+  stepped: true
+});
+  </pre>
+  <p>
+    Increasing the number of <strong>attempts</strong> (e.g., from 10 to 1000) overlays many independent trajectories, 
+    making it visually clear how randomness averages out and the paths cluster near a common mean line.
+  </p>
+
+  <hr>
+
+  <h2>5️⃣ Gaussian Distribution and Probabilistic Limit</h2>
+  <p>
+    Once all walks are generated, the simulation collects the final success counts and passes them to the Gaussian module:
+  </p>
+  <pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+const finalValues = datasets.map(d => d.data[d.data.length - 1].y);
+window.dispatchEvent(new CustomEvent("lgnDataReady", {
+  detail: { values: finalValues, steps: STEPS, p: PROB }
+}));
+  </pre>
+
+  <p>
+  This part illustrates how the distribution of the final outcomes from all random walks tends to form a <strong>bell-shaped curve</strong> — the classic <em>Gaussian distribution</em>.
+  As the number of attempts increases, the variability between results decreases, and the data begin to cluster more tightly around the mean.
+</p>
+
+  <p>
+  The script gauss.js computes two key statistical quantities from the final results of all random walks:
+</p>
+
+<pre style="background-color:#222; color:#eee; padding:1rem; border-radius:8px;">
+mean = Σxᵢ / n
+f(x) = (1 / (σ√(2π))) * e^(-(x - μ)² / (2σ²))
+</pre>
+
+<p>
+  The first formula calculates the <strong>empirical mean</strong> — the average of all final values (<em>xᵢ</em>) obtained from the walks.
+  It represents the “center” of the observed distribution: where most outcomes tend to cluster.
+</p>
+
+<p>
+  The second formula is the <strong>Gaussian (normal) probability density function</strong>.
+  It uses the mean (<em>μ</em>) and the <strong>standard deviation</strong> (<em>σ</em>), 
+  which measures how spread out the results are around the mean.
+</p>
+
+<p>
+  Intuitively:
+  <ul>
+    <li>If <em>σ</em> is large → results vary widely → the curve is <strong>wide and flat</strong>.</li>
+    <li>If <em>σ</em> is small → results are concentrated near the mean → the curve is <strong>narrow and tall</strong>.</li>
+  </ul>
+</p>
+
+<p class="mb-0">
+  This Gaussian curve therefore shows <strong>how the outcomes are distributed</strong> across many trials:
+  it visualizes the spread of final results and how they stabilize as the number of attempts increases.
+</p>
+
+  <hr>
+
+  <h2>6️⃣ Interpretation</h2>
+  <p>
+    - Few trials → high variability, broad Gaussian, paths diverge.<br>
+    - Many trials → stability emerges, Gaussian narrows around the mean.<br>
+    - The empirical average approaches the theoretical probability p.
+  </p>
+  <p class="mb-0">
+    Through these interactive parameters, users can <strong>observe convergence visually</strong>:  
+    randomness dominates at small scales but fades at large scales, revealing the deterministic behavior 
+    that underlies probabilistic systems.
+  </p>
+</section>
+
+  <!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 4</small></p>
+</footer>
+
+  <script src="js/lgn.js"></script>
+  <script src="js/gauss.js"></script>
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

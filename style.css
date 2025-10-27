@@ -276,4 +276,173 @@ textarea, input[type=number] {
   }
 }
 
+/* === Chart layout fix === */
+#oracleDist,
+#attemptDist {
+  display: block;
+  width: 100%;
+  max-height: 250px;     /* limita l'altezza massima */
+  height: 220px;         /* altezza consigliata */
+  margin-top: 0.5rem;
+}
 
+/* opzionale: anche i canvas del reference e encrypt */
+#refDist,
+#oracleCanvas,
+#encryptCanvas {
+  max-height: 200px;
+  height: 180px;
+}
+
+
+.bar-chart {
+  flex: 1 1 48%; /* più largo del precedente 45% */
+  min-width: 350px;
+  background-color: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+
+/* Contenitore principale delle barre */
+.bars-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  overflow-x: hidden;
+  width: 100%;
+  height: 300px;
+  margin: 0 auto;
+  padding: 30px 0 15px;  /* 🔹 più spazio sopra e sotto */
+}
+
+/* Ogni singola barra */
+.bar {
+  flex: 0 1 auto;
+  width: 20px;
+  margin: 0 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Rettangolo colorato della barra */
+.bar-rect {
+  width: 100%;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s ease;
+}
+
+.bar-label {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.1; /* 🔹 compatta le due righe */
+}
+
+.bar-label .token-number {
+  font-size: 11px;
+  font-weight: 500;
+  color: #cce0ff; /* 🔹 leggermente più chiaro per differenziare */
+  margin-top: 1px;
+}
+
+
+/* Valore sopra ogni barra */
+.bar-value {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+
+
+.bar-count {
+  font-size: 10px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.mapping-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+
+.mapping-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  min-width: 70px;
+}
+
+.mapping-cell strong {
+  font-size: 1rem;
+  color: #00c4ff;
+  margin-bottom: 6px;
+}
+
+.mapping-cell select {
+  background-color: #111;
+  color: #00ff9c;
+  border: 1px solid #00ff9c;
+  border-radius: 4px;
+  padding: 4px;
+  width: 100%;
+  text-align: center;
+}
+
+#clearMappingsBtn {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-color: #ff5555;
+  color: #ff5555;
+}
+
+#clearMappingsBtn:hover {
+  background-color: #ff5555;
+  color: black;
+}
+
+#mappingGridSection {
+  background-color: #000 !important;  /* forza lo sfondo nero */
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.mapping-cell {
+  background-color: #111; /* grigio scuro */
+  border: 1px solid #333;
+}
+
+#mappingGridSection h5 {
+  color: #00c4ff;              /* azzurro cibernetico */
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+#plainAnalysis,
+#plainInput {
+  background-color: #000 !important;
+  color: #00ff9c;
+  border: 1px solid #00ff9c;
+}
+
+#decodedText {
+  white-space: pre-wrap;       /* mostra spazi e a capo */
+  font-family: monospace;      /* mantiene larghezza fissa */
+  font-size: 1.1rem;
+}
