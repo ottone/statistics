@@ -9,6 +9,16 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../style.css?v=2">
+  <style>
+    /* stile per grafici e box RSA Crack */
+    .bars-container { display:flex; align-items:flex-end; gap:6px; min-height:200px; }
+    .bar { text-align:center; width:14px; }
+    .bar-rect { border-radius:4px; width:100%; }
+    .bar-label { margin-top:6px; font-size:12px; }
+    .rsa-crack { background:#0b0b0b; color:#eee; padding:10px; border-radius:8px; margin-bottom:18px; }
+    .rsa-crack .form-select, .rsa-crack .form-select-sm { background:#111 !important; color:#eee !important; border:1px solid #333 !important; }
+    .rsa-crack .btn-crack { background:#dcdcdc; color:#222; border:none; }
+  </style>
 </head>
 
 <body class="container py-4">
@@ -16,36 +26,95 @@
   <h1>Homework 3 - Decoding RSA with Distribution</h1>
   <p class="lead">🧠 Decoding RSA Encryption Through Frequency Analysis</p>
 </header>
+
 <main>
 <article>
 
 <section aria-labelledby="user-interaction">
   <h2 id="user-interaction">🧩 User Interaction</h2>
   <p>
-  The page displays the encrypted tokens <strong>"Ciphertext"</strong> and a bar chart of their frequency distribution <strong>"Frequency token"</strong>. In the input box labeled <strong>“Plaintext Statistical Analysis”</strong>, you can enter an English text sample.
-  The algorithm then calculates the character frequency distribution <strong>"Frequency clear text"</strong> of your sample. By comparing the plaintext character frequencies with the token frequency chart,
-  you can attempt to infer the original plaintext using classical frequency-analysis techniques. Use the select controls at the bottom of the page in  the <strong>"Mapping Token to Letter"</strong>
-  to manually map each plaintext character to its corresponding encrypted token, refining your decryption attempt.
+  The demo starts from three realistic-sounding assumptions an analyst might have in a simple, educational scenario:
 </p>
+<ul>
+  <li><strong>Small known set of possible public exponents (e)</strong> — the attacker does not know the real public key but suspects it belongs to a short list of common values (for example 3, 5, 7, 11, 13, 17).</li>
+  <li><strong>Ciphertext tokens are observable</strong> — the attacker can see the sequence of encrypted tokens produced by the system (each token is a number: C).</li>
+  <li><strong>Frequency information is available</strong> — by counting how often each token appears, the attacker can hypothesize that the most frequent ciphertext tokens correspond to the most frequent plaintext letters (e.g. <em>E</em>, <em>T</em>, etc.).</li>
+</ul>
+
 <p>
-  HINT: Entering a longer English text helps produce a more accurate frequency analysis, giving a better comparison with the encrypted token distribution.
+  From those assumptions the attack proceeds with a simple insight: if we guess that a particular ciphertext token C corresponds to a plaintext letter L (mapped to a numeric value M, e.g. A=1 … Z=26) and we try a candidate public exponent e, then the value
+  |M^e − C| must be divisible by the modulus N used in the RSA encryption (because C ≡ M^e (mod N)).
+  In other words, <strong>N is a divisor of M^e − C</strong>.
 </p>
+
+<p><strong>Step-by-step algorithm used in this demo</strong></p>
+<ol>
+  <li><strong>Choose a candidate e</strong> from the dropdown (one of the suspected public exponents).</li>
+  <li><strong>Pick a ciphertext token C</strong> that, by frequency analysis, you suspect corresponds to a common plaintext letter. Help yourself in text frequency analysis, putting a text in "Plaintext Statistical Analysis" box</li>
+  <li><strong>Select the suspected plaintext letter L</strong> (mapped to a number M between 1 and 26).</li>
+  <li><strong>Compute D = |M^e − C|</strong> and factor D (or compute its divisors). Any nontrivial divisor of D is a candidate for N, because if the guess is correct then M^e − C is divisible by the true N.</li>
+  <li><strong>Try candidate N values</strong>: for each plausible divisor, attempt to factor it into two primes p and q. If N = p·q, compute Euler’s totient φ(N) = (p−1)(q−1).</li>
+  <li><strong>Compute the private exponent d</strong> as the modular inverse of e modulo φ(N), i.e. find d such that e·d ≡ 1 (mod φ(N)). If such d exists, (N,d) is a valid private key pair for that candidate.</li>
+  <li><strong>Use (N,d) to decrypt the whole ciphertext</strong> (letter-by-letter): M = C^d mod N, map numbers back to letters, and inspect the result in the <em>Decoding…</em> box.</li>
+</ol>
+
+<p><strong>Important notes & limitations</strong>:</p>
+<ul>
+  <li>This method only works in this simplified, didactic setting: real-world RSA uses very large moduli and different padding schemes that prevent this attack.</li>
+  <li>A single (token, letter) guess may not identify N uniquely: often several divisors divide M^e − C. Using multiple guessed pairs or additional constraints (frequency matches across many tokens) increases confidence.</li>
+  <li>If the chosen e is wrong or the guessed mapping is incorrect, the script will either fail to find valid p,q or it will produce incorrect plaintext; the UI is meant to let you experiment and learn how the math behaves.</li>
+</ul>
 </section>
+
+<!-- 🔹 RSA Crack box (nero) -->
+<section class="rsa-crack" aria-labelledby="rsa-crack-title">
+  <h3 id="rsa-crack-title" class="h6 mb-2">RSA Crack</h3>
+  <div class="row g-2 align-items-end">
+    <div class="col-sm-3">
+      <label class="form-label text-muted small">Select e</label>
+      <select id="selectE" class="form-select form-select-sm">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="7">7</option>
+        <option value="11" selected>11</option>
+        <option value="13">13</option>
+        <option value="17">17</option>
+      </select>
+    </div>
+
+    <div class="col-sm-3">
+      <label class="form-label text-muted small">Select token</label>
+      <select id="selectToken" class="form-select form-select-sm">
+        <option value="">-</option>
+      </select>
+    </div>
+
+    <div class="col-sm-3">
+      <label class="form-label text-muted small">Select letter</label>
+      <select id="selectLetter" class="form-select form-select-sm">
+        <option value="">-</option>
+      </select>
+    </div>
+
+    <div class="col-sm-3 d-grid">
+      <button id="crackBtn" class="btn btn-crack btn-sm fw-bold">Crack!</button>
+    </div>
+  </div>
+</section>
+
 <!-- 🔹 Testo in chiaro -->
-<section class="mt-4">
+<section class="mt-2">
   <h2>Plaintext Statistical Analysis</h2>
   <textarea id="plainAnalysis" class="form-control" rows="4" placeholder="Scrivi qui del testo in inglese..."></textarea>
 
   <!-- 🔹 Grafici affiancati -->
-  <div id="barChartsWrapper" class="d-flex flex-column align-items-center mt-4" style="gap: 40px; display: none;">
-    <!-- Istogramma lettere -->
-    <div class="bar-chart">
+  <div id="barChartsWrapper" class="d-flex flex-column align-items-center mt-4" style="gap: 40px;">
+    <div class="bar-chart w-100">
       <h6 class="text-center text-success">Frequency clear text</h6>
       <div id="barChartLetters" class="bars-container"></div>
     </div>
 
-    <!-- Istogramma token -->
-    <div class="bar-chart">
+    <div class="bar-chart w-100">
       <h6 class="text-center text-primary">Frequency token</h6>
       <div id="barChartTokens" class="bars-container"></div>
     </div>
@@ -58,173 +127,12 @@
   <div id="decodedText" class="p-3 border rounded"></div>
 </section>
 
-<!-- 🔹 Cifratura -->
-<section class="mt-4" id="chartsSection">
-  <div id="cipherBox" class="mt-4" style="display:none;">
-    <h2>Ciphertext</h2>
-    <div id="cipherOutput" class="p-3 border rounded"></div>
-  </div>
-</section>
-
-<section id="mappingGridSection" class="mt-5 p-3 border rounded bg-light" style="display:none;">
-  <h2>🔠 Mapping Token to Letter</h2>
-  <div class="mapping-grid mt-3" id="mappingGrid"></div>
-  </div>
-</section>
-<section aria-labelledby="rsa-overview">
-  <h2 class="text-center mb-3">🧮 Algorithm Description</h2>
-  <p>
-  RSA is a public-key cryptosystem based on two prime numbers. 
-  Each character of the message is first converted into a numeric value 
-  from <strong>1 to 26</strong> (for example, <strong>A → 1</strong>, <strong>B → 2</strong>, …, <strong>Z → 26</strong>). 
-  This number is then raised to the power of the public exponent <strong>e</strong> 
-  and reduced modulo <strong>N</strong>, producing an encrypted token.
-  </p>
-
-  <p>
-  For instance, if we take <strong>M = 1</strong> for the letter <strong>A</strong> 
-  and apply the encryption formula <strong>C = Mᵉ mod N</strong>, 
-  we obtain a different number <strong>C</strong> representing the ciphertext. 
-  Each letter is transformed in this way, resulting in a sequence of encrypted tokens.
-  </p>
-
-  <p>
-  Security relies on the fact that, while it is easy to compute <strong>C</strong> 
-  from <strong>M</strong> using the public key, 
-  it is extremely hard to recover <strong>M</strong> from <strong>C</strong> 
-  without knowing the private key <strong>d</strong>, 
-  since this would require factoring <strong>N</strong> into its prime components.
-  </p>
-  <ul>
-    <li><strong>p</strong> and <strong>q</strong> – primes used to compute the modulus <strong>N = p × q</strong>, shared by the public and private keys.</li>
-    <li><strong>φ(N)</strong> – Euler’s totient, calculated as <strong>(p − 1)(q − 1)</strong>.</li>
-    <li><strong>e</strong> – the public exponent, used for encryption.</li>
-    <li><strong>d</strong> – the private exponent, used for decryption.</li>
-  </ul>
-
-  <p>
-    Encryption and decryption use modular exponentiation:<strong>C = M^e mod N</strong> and <strong>M = C^d mod N</strong>.
-  </p>
-  <p>
-    The parameter for this exercise are the follow, and each letter of the message is encrypted individually using these parameters:
-  </p>
-  <p>
-  <strong>p</strong> = 13,&nbsp;
-  <strong>q</strong> = 17,&nbsp;
-  <strong>N</strong> = 221 (<em>N = p × q</em>),&nbsp;
-  <strong>φ(N)</strong> = 192,&nbsp;
-  <strong>e</strong> = 11 (public exponent),&nbsp;
-  <strong>d</strong> = 35 (private exponent)
-  </p>
-
-  <h2>1️⃣ Generating valid numbers</h2>
-  <p>
-    RSA requires numbers that are coprime with the modulus N.  
-    The function below finds all integers smaller than N that share no 
-    common divisors with it:
-  </p>
-  <pre><code>function gcd(a, b) { 
-  return b === 0 ? a : gcd(b, a % b); 
-}
-
-function coprimi(N) {
-  const v = [];
-  for (let i = 1; i < N; i++) 
-    if (gcd(i, N) === 1) v.push(i);
-  return v;
-}</code></pre>
-
-  <h2>2️⃣ Mapping letters to numbers</h2>
-  <p>
-    Each character in the alphabet is associated with one of the coprime numbers.  
-    This mapping ensures every letter can be safely encrypted using the RSA formula.
-  </p>
-  <pre><code>const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-const validNumbers = coprimi(N);
-const mapping = {};
-for (let i = 0; i < alphabet.length; i++) 
-  mapping[alphabet[i]] = validNumbers[i];</code></pre>
-
-  <h2>3️⃣ Modular exponentiation (core of RSA)</h2>
-  <p>
-    Encryption and decryption are based on modular exponentiation.  
-    The function below efficiently computes (base^exp) mod mod using the 
-    square-and-multiply algorithm:
-  </p>
-  <pre><code>function modExp(base, exp, mod) {
-  let result = 1n;
-  let b = BigInt(base) % BigInt(mod);
-  let e = BigInt(exp);
-  let m = BigInt(mod);
-  while (e > 0n) {
-    if (e & 1n) result = (result * b) % m;
-    b = (b * b) % m;
-    e >>= 1n;
-  }
-  return Number(result);
-}</code></pre>
-
-  <h2>4️⃣ Encrypting the secret text</h2>
-  <p>
-    Each plaintext letter is converted to a number M and then encrypted with 
-    the public exponent e and modulus N using the formula 
-    C = M^e mod N.  
-    The resulting numbers C are called cipher tokens.
-  </p>
-  <pre><code>function encryptTextToTokens(text) {
-  const tokens = [];
-  const upper = text.toUpperCase().trim();
-  for (let c of upper) {
-    if (mapping[c] !== undefined) {
-      const M = mapping[c];
-      const C = modExp(M, e, N);
-      tokens.push(C);
-    }
-  }
-  return tokens;
-}</code></pre>
-
-  <h2>5️⃣ Frequency analysis</h2>
-  <p>
-    When the user types an English sample in the box, the script counts how often 
-    each letter appears and shows a bar chart.  
-    By comparing it with the ciphertext token distribution, you can try to guess 
-    which tokens represent which letters.
-  </p>
-  <pre><code>function recalcAllFromPlainAnalysis() {
-  const src = plainAnalysis.value || "";
-  const text = src.toUpperCase();
-  // Count letter frequencies
-  const freq = {};
-  for (let ch of alphabet) freq[ch] = 0;
-  for (let ch of text) if (freq[ch] !== undefined) freq[ch]++;
-  updateBarCharts(text);
-}</code></pre>
-
-  <h2>6️⃣ Manual token mapping</h2>
-  <p>
-    The interface lets you manually map tokens to letters.  
-    When a mapping is chosen, the program tries to reconstruct the secret message:
-  </p>
-  <pre><code>function updateDecodedText() {
-  const tokenToLetter = {};
-  for (const [letter, token] of Object.entries(letterToToken))
-    if (token) tokenToLetter[token] = letter;
-
-  const decoded = secretCipherTokens
-    .map(t => tokenToLetter[t] || " ")
-    .join("");
-  decodedText.textContent = decoded;
-}</code></pre>
-
-</section>
-<!-- ========================================================= -->
-
-
 <!-- Pulsante back -->
 <div class="mt-4 text-center">
   <a href="../index.html" class="btn btn-primary">← Back to Home</a>
 </div>
+
+</article>
 </main>
 
 <footer class="mt-5 text-center">

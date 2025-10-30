@@ -1,33 +1,41 @@
-const N = 221, e = 11, d = 35;
+// rsa1.js — pulito e funzionante
+
+// === Parametri RSA didattici (per generare i token) ===
+const N = 221;
+const eDefault = 11;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+
+// === Riferimenti DOM ===
 const plainAnalysis = document.getElementById("plainAnalysis");
-const cipherBox = document.getElementById("cipherBox");
-const cipherOutput = document.getElementById("cipherOutput");
+const decodedSection = document.getElementById("decodedSection");
 const decodedText = document.getElementById("decodedText");
-const mappingGrid = document.getElementById("mappingGrid");
-const mappingGridSection = document.getElementById("mappingGridSection");
 
-let cipherTokens = [];
-let secretCipherTokens = [];
-let freqChiaro = {};
-const letterToToken = {};
-let plainChart = null;
+const selectE = document.getElementById("selectE");
+const selectToken = document.getElementById("selectToken");
+const selectLetter = document.getElementById("selectLetter");
+const crackBtn = document.getElementById("crackBtn");
 
-// 🔹 Testo segreto (non mostrato mai all’utente)
-const secretText = `KNOWLEDGE IS POWER AND IGNORANCE IS WEAKNESS. THE MORE WE LEARN, THE MORE WE UNDERSTAND HOW LITTLE WE KNOW. EVERY DISCOVERY OPENS A DOOR TO NEW QUESTIONS, AND EACH QUESTION LEADS US CLOSER TO THE TRUTH THAT HUMANITY HAS SOUGHT FOR CENTURIES.
-`;
+const barChartLetters = document.getElementById("barChartLetters");
+const barChartTokens = document.getElementById("barChartTokens");
 
-// -------------------- RSA utilità --------------------
+// === Testo segreto ===
+const secretText = `KNOWLEDGE IS POWER AND IGNORANCE IS WEAKNESS. THE MORE WE LEARN, THE MORE WE UNDERSTAND HOW LITTLE WE KNOW. EVERY DISCOVERY OPENS A DOOR TO NEW QUESTIONS, AND EACH QUESTION LEADS US CLOSER TO THE TRUTH THAT HUMANITY HAS SOUGHT FOR CENTURIES.`;
+
+// === Utilità matematiche ===
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
-function coprimi(N) {
-  const v = [];
-  for (let i = 1; i < N; i++) if (gcd(i, N) === 1) v.push(i);
-  return v;
+function egcd(a, b) {
+  a = BigInt(a); b = BigInt(b);
+  if (b === 0n) return { g: a, x: 1n, y: 0n };
+  const r = egcd(b, a % b);
+  return { g: r.g, x: r.y, y: r.x - (a / b) * r.y };
 }
-const validNumbers = coprimi(N);
-const mapping = {};
-for (let i = 0; i < alphabet.length; i++) mapping[alphabet[i]] = validNumbers[i];
-
+function modInv(a, m) {
+  const { g, x } = egcd(a, m);
+  if (g !== 1n && g !== -1n) return null;
+  let res = x % m;
+  if (res < 0n) res += m;
+  return res;
+}
 function modExp(base, exp, mod) {
   let result = 1n, b = BigInt(base) % BigInt(mod), e = BigInt(exp), m = BigInt(mod);
   while (e > 0n) {
@@ -37,236 +45,246 @@ function modExp(base, exp, mod) {
   }
   return Number(result);
 }
+function trialFactor(n) {
+  n = BigInt(n);
+  const factors = [];
+  let d = 2n;
+  while (d * d <= n) {
+    while (n % d === 0n) { factors.push(Number(d)); n /= d; }
+    d += d === 2n ? 1n : 2n;
+  }
+  if (n > 1n) factors.push(Number(n));
+  return factors;
+}
+function allDivisorsFromPrimeFactors(pf) {
+  const m = new Map();
+  pf.forEach(p => m.set(p, (m.get(p) || 0) + 1));
+  const primes = [...m.keys()];
+  const exps = primes.map(p => m.get(p));
+  const divisors = [1];
+  for (let i = 0; i < primes.length; i++) {
+    const p = primes[i], k = exps[i];
+    const len = divisors.length;
+    let mul = 1;
+    for (let e = 1; e <= k; e++) {
+      mul *= p;
+      for (let j = 0; j < len; j++) divisors.push(divisors[j] * mul);
+    }
+  }
+  return divisors.sort((a, b) => a - b);
+}
+function factorSemiprime(n) {
+  for (let i = 2; i * i <= n; i++) if (n % i === 0) return { p: i, q: n / i };
+  return null;
+}
 
-// -------------------- Funzioni principali --------------------
+// === Mappatura lettere -> numeri (coprimi con N) ===
+function coprimi(N) {
+  const v = [];
+  for (let i = 1; i < N; i++) if (gcd(i, N) === 1) v.push(i);
+  return v;
+}
+const validNumbers = coprimi(N);
+const mapping = {};
+for (let i = 0; i < alphabet.length; i++) mapping[alphabet[i]] = validNumbers[i];
+const reverseMapping = Object.fromEntries(Object.entries(mapping).map(([k, v]) => [String(v), k]));
+
+// === Cifratura per ottenere i token del testo segreto ===
 function encryptTextToTokens(text) {
   const tokens = [];
-  const upper = text.toUpperCase().trim();
-  for (let c of upper) {
-    if (mapping[c] !== undefined) {
-      const M = mapping[c];
-      const C = modExp(M, e, N);
+  const up = text.toUpperCase();
+  for (const ch of up) {
+    if (mapping[ch] !== undefined) {
+      const M = mapping[ch];
+      const C = modExp(M, eDefault, N);
       tokens.push(C);
     }
   }
   return tokens;
 }
 
-// 🔹 Analizza testo inserito dall’utente nel box
-function recalcAllFromPlainAnalysis() {
-  const src = plainAnalysis.value || "";
-  const text = src.toUpperCase();
+// === Grafici a barre (DOM) ===
+function renderFrequencyChart(container, freq, color) {
+  if (!container) return;
+  container.innerHTML = "";
 
-  freqChiaro = {};
-  for (let ch of alphabet) freqChiaro[ch] = 0;
-  for (let ch of text) if (freqChiaro[ch] !== undefined) freqChiaro[ch]++;
+  // Filtra solo gli elementi con frequenza > 0
+  let entries = Object.entries(freq).filter(([, v]) => v > 0);
 
-  const total = Object.values(freqChiaro).reduce((a, b) => a + b, 0);
-  if (total === 0) {
-    const wrapper = document.getElementById("barChartsWrapper");
-    const lettersContainer = document.getElementById("barChartLetters");
-
-    if (lettersContainer) lettersContainer.innerHTML = ""; // 🔹 pulisci il grafico
+  if (entries.length === 0) {
+    container.innerHTML = "<p class='text-muted small'>Nessun dato</p>";
     return;
   }
 
-  if (typeof updateBarCharts === "function") updateBarCharts(text);
+  // 🔹 Ordina per frequenza decrescente
+  entries.sort((a, b) => b[1] - a[1]);
+
+  // 🔹 Calcola la frequenza massima per scalare le altezze
+  const max = Math.max(...entries.map(([, v]) => v));
+
+  // 🔹 Crea dinamicamente le barre ordinate
+  entries.forEach(([label, val]) => {
+    const wrap = document.createElement("div");
+    wrap.className = "bar";
+
+    const rect = document.createElement("div");
+    rect.className = "bar-rect";
+    rect.style.height = `${Math.max(6, (val / max) * 180)}px`;
+    rect.style.backgroundColor = color;
+    rect.title = `${label}: ${val}`;
+
+    const lab = document.createElement("div");
+    lab.className = "bar-label";
+    lab.textContent = label === " " ? "␣" : label;
+
+    wrap.appendChild(rect);
+    wrap.appendChild(lab);
+    container.appendChild(wrap);
+  });
 }
 
-// -------------------- Grafico frequenza lettere (testo utente) --------------------
-function updateBarCharts(text) {
-  const wrapper = document.getElementById("barChartsWrapper");
-  const lettersContainer = document.getElementById("barChartLetters");
-
-  // Mostra il contenitore dei grafici
-  wrapper.style.display = "flex";
-
-  // Calcola la frequenza delle lettere
+function renderTokenChart(tokens) {
   const freq = {};
-  for (let ch of alphabet) freq[ch] = 0;
-  for (let ch of text) if (freq[ch] !== undefined) freq[ch]++;
-
-  // Filtra solo quelle con conteggio > 0
-  const data = Object.entries(freq).filter(([_, v]) => v > 0);
-  if (data.length === 0) {
-    lettersContainer.innerHTML = "<p class='text-muted'>Nessuna lettera valida trovata.</p>";
-    return;
-  }
-
-  // Svuota il grafico precedente
-  lettersContainer.innerHTML = "";
-
-  // Trova la frequenza massima per il calcolo delle altezze
-  const maxLettere = Math.max(...data.map(([, v]) => v), 1);
-  const maxBarHeight = 180; // altezza massima in px
-
-  // Crea le barre
-  data.sort((a, b) => b[1] - a[1]).forEach(([ch, v]) => {
-    const bar = document.createElement("div");
-    bar.className = "bar";
-    bar.style.position = "relative";
-
-    const rect = document.createElement("div");
-    rect.className = "bar-rect";
-    rect.style.backgroundColor = "#28a745";
-    rect.style.borderColor = "#28a745";
-    const height = Math.max(5, (v / maxLettere) * maxBarHeight);
-    rect.style.height = `${height}px`;
-
-    const value = document.createElement("div");
-    value.textContent = v;
-    value.style.position = "absolute";
-    value.style.bottom = `${height + 16}px`; // un po’ più sopra
-    value.style.left = "50%";
-    value.style.transform = "translateX(-50%)";
-    value.style.fontSize = "12px";
-    value.style.fontWeight = "bold";
-    value.style.color = "#28a745";
-
-    const label = document.createElement("div");
-    label.className = "bar-label";
-    label.textContent = ch === " " ? "␣" : ch;
-
-    bar.appendChild(rect);
-    bar.appendChild(value);
-    bar.appendChild(label);
-    lettersContainer.appendChild(bar);
-  });
+  tokens.forEach(t => { freq[t] = (freq[t] || 0) + 1; });
+  renderFrequencyChart(barChartTokens, freq, "#007bff");
+}
+function renderLetterChartFromText(text) {
+  const freq = {};
+  for (const ch of alphabet) freq[ch] = 0;
+  const up = (text || "").toUpperCase();
+  for (const ch of up) if (freq[ch] !== undefined) freq[ch]++;
+  renderFrequencyChart(barChartLetters, freq, "#28a745");
 }
 
-
-// -------------------- Grafico token segreti --------------------
-function renderSecretCipherChart() {
-  const tokensContainer = document.getElementById("barChartTokens");
-  const wrapper = document.getElementById("barChartsWrapper");
-
-  // Frequenze token
-  const freqToken = {};
-  secretCipherTokens.forEach(t => freqToken[t] = (freqToken[t] || 0) + 1);
-  const tokenData = Object.entries(freqToken).filter(([_, v]) => v > 0);
-
-  wrapper.style.display = "flex";
-  tokensContainer.innerHTML = "";
-
-  const maxToken = Math.max(...tokenData.map(([, v]) => v), 1);
-
-  tokenData.sort((a, b) => b[1] - a[1]).forEach(([tok, v]) => {
-    const bar = document.createElement("div");
-    bar.className = "bar";
-    bar.style.position = "relative";
-
-    const rect = document.createElement("div");
-    rect.className = "bar-rect";
-    rect.style.backgroundColor = "#007bff";
-    rect.style.borderColor = "#007bff";
-    // Altezza proporzionale in pixel
-    const maxBarHeight = 180; // altezza massima in px del grafico
-    const barHeight = Math.max(5, (v / maxToken) * maxBarHeight);
-    rect.style.height = `${barHeight}px`;
-
-    const value = document.createElement("div");
-    value.textContent = v;
-    value.style.position = "absolute";
-    value.style.bottom = `${barHeight + 8}px`;
-    value.style.left = "50%";
-    value.style.transform = "translate(-50%, -120%)";
-    value.style.fontSize = "12px";
-    value.style.fontWeight = "bold";
-    value.style.color = "#007bff";
-
-    const label = document.createElement("div");
-    label.className = "bar-label";
-    label.innerHTML = `<div>T</div><div class="token-number">${tok}</div>`;
-
-    bar.appendChild(rect);
-    bar.appendChild(value);
-    bar.appendChild(label);
-    tokensContainer.appendChild(bar);
-  });
-
-  // Mostra solo il box del ciphertext cifrato
-  cipherOutput.textContent = secretCipherTokens.join(" ");
-  cipherBox.style.display = "block";
-
-  // Mappatura attiva
-  mappingGridSection.style.display = "block";
-  buildMappingGrid();
-}
-
-// -------------------- Griglia e decodifica --------------------
-function buildMappingGrid() {
-  mappingGrid.innerHTML = "";
-  alphabet.split("").forEach(letter => {
-    const cell = document.createElement("div");
-    cell.classList.add("mapping-cell");
-    const label = document.createElement("strong");
-    label.textContent = letter === " " ? "␣" : letter;
-
-    const select = document.createElement("select");
-    const empty = document.createElement("option");
-    empty.value = "";
-    empty.textContent = "-";
-    select.appendChild(empty);
-
-    const uniqueTokens = [...new Set(secretCipherTokens)].sort((a, b) => a - b);
-    uniqueTokens.forEach(token => {
+// === Popola select del box RSA Crack ===
+function populateSelects(tokens) {
+  // token
+  if (selectToken) {
+    selectToken.innerHTML = "";
+    const ph = document.createElement("option");
+    ph.value = ""; ph.textContent = "-";
+    selectToken.appendChild(ph);
+    const unique = [...new Set(tokens)].sort((a, b) => a - b);
+    unique.forEach(t => {
       const opt = document.createElement("option");
-      opt.value = token;
-      opt.textContent = token;
-      select.appendChild(opt);
+      opt.value = String(t);
+      opt.textContent = String(t);
+      selectToken.appendChild(opt);
     });
-
-    select.addEventListener("change", () => {
-      if (select.value) letterToToken[letter] = select.value;
-      else delete letterToToken[letter];
-      updateDecodedText();
+  }
+  // lettera
+  if (selectLetter) {
+    selectLetter.innerHTML = "";
+    const ph = document.createElement("option");
+    ph.value = ""; ph.textContent = "-";
+    selectLetter.appendChild(ph);
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
+      const opt = document.createElement("option");
+      opt.value = l; opt.textContent = l;
+      selectLetter.appendChild(opt);
     });
-
-    cell.appendChild(label);
-    cell.appendChild(select);
-    mappingGrid.appendChild(cell);
-  });
+  }
 }
 
-function updateDecodedText() {
-  const decodedSection = document.getElementById("decodedSection");
-  if (!decodedSection) return;
+// === Algoritmo Crack (6 passi) ===
+function crackRSA() {
+  const eChosen = Number(selectE.value);
+  const token = Number(selectToken.value);
+  const letter = (selectLetter.value || "").toUpperCase();
 
-  const tokenToLetter = {};
-  for (const [letter, token] of Object.entries(letterToToken)) {
-    if (token) tokenToLetter[String(token)] = letter;
-  }
-
-  const hasMappings = Object.keys(tokenToLetter).length > 0;
-  if (!hasMappings) {
-    decodedSection.style.display = "none";
-    decodedText.textContent = "";
+  if (!eChosen || !token || !letter) {
+    alert("Seleziona e, token e lettera prima di premere Crack!");
     return;
   }
 
-  const decoded = secretCipherTokens
-    .map(t => tokenToLetter[String(t)] || " ")
-    .join("");
+  const M = mapping[letter];
+  if (!M) { alert("Lettera non valida o non mappata!"); return; }
+
+  // 3) diff = |M^e - token|
+  let diff = (BigInt(M) ** BigInt(eChosen)) - BigInt(token);
+  if (diff < 0n) diff = -diff;
+
+  // Divisori di diff (candidati a N)
+  const pf = trialFactor(diff);
+  if (pf.length === 0) { alert("N non trovato: |M^e - C| non fattorizzabile utilmente."); return; }
+  const divisors = allDivisorsFromPrimeFactors(pf);
+
+  // Scegli N: più piccolo divisore > max token e > max M
+  const maxToken = Math.max(...secretCipherTokens);
+  const maxM = Math.max(...Object.values(mapping));
+  const candidates = divisors.filter(d => d > maxToken && d > maxM);
+  if (candidates.length === 0) { alert("N non individuato fra i divisori candidati."); return; }
+  const Nfound = candidates[0];
+
+  // 4) Fattorizza N in p, q
+  const pq = factorSemiprime(Nfound);
+  if (!pq) { alert("N trovato non è semiprimo."); return; }
+  const { p, q } = pq;
+
+  // 5) φ(N)
+  const phi = (p - 1) * (q - 1);
+
+  // 6) d = e^{-1} mod φ(N)
+  const dBig = modInv(BigInt(eChosen), BigInt(phi));
+  if (dBig === null) { alert("e scelto non è invertibile modulo φ(N)."); return; }
+  const d = Number(dBig);
+
+  // Decodifica completa
+  const decoded = secretCipherTokens.map(c => {
+    const Mv = modExp(c, d, Nfound);
+    return reverseMapping[String(Mv)] || "?";
+  }).join("");
 
   decodedSection.style.display = "block";
   decodedText.textContent = decoded;
+
+  // Parametri
+  const old = decodedSection.querySelector(".rsa-params-box");
+  if (old) old.remove();
+  const resBox = document.createElement("div");
+  resBox.className = "rsa-params-box mt-3 p-3 rounded";
+  resBox.style.background = "#0b0b0b";
+  resBox.style.color = "#eaeaea";
+  resBox.style.border = "1px solid #333";
+  resBox.style.display = "flex";
+  resBox.style.flexDirection = "column";
+  resBox.style.gap = "6px";
+
+  resBox.innerHTML = `
+    <div style="font-weight:bold; color:#dcdcdc;">🔑 RSA Parameters Found</div>
+    <div style="font-family:monospace; display:flex; flex-wrap:wrap; gap:16px;">
+      <span><strong>e:</strong> ${eChosen}</span>
+      <span><strong>p:</strong> ${p}</span>
+      <span><strong>q:</strong> ${q}</span>
+      <span><strong>N:</strong> ${Nfound}</span>
+      <span><strong>φ(N):</strong> ${phi}</span>
+      <span><strong>d:</strong> ${d}</span>
+    </div>
+  `;
+
+  decodedSection.appendChild(resBox);
 }
 
-// -------------------- Inizializzazione --------------------
-document.addEventListener("DOMContentLoaded", () => {
-  // 🔹 Cifra il testo segreto
+// === Stato globale token (UNA sola volta, no duplicati) ===
+let secretCipherTokens = [];
+
+// === Init ===
+window.addEventListener("DOMContentLoaded", () => {
+  // 1) genera i token dal testo segreto
   secretCipherTokens = encryptTextToTokens(secretText);
-  renderSecretCipherChart();
 
-  // 🔹 Gestisci input dell’utente per analisi del testo in chiaro
-  plainAnalysis?.addEventListener("input", debounce(recalcAllFromPlainAnalysis, 200));
+  // 2) popola select con token e lettere
+  populateSelects(secretCipherTokens);
+
+  // 3) disegna grafico token (blu)
+  renderTokenChart(secretCipherTokens);
+
+  // 4) disegna grafico lettere (verde) iniziale (vuoto)
+  renderLetterChartFromText("");
+
+  // 5) listeners
+  plainAnalysis?.addEventListener("input", () => {
+    renderLetterChartFromText(plainAnalysis.value || "");
+  });
+  crackBtn?.addEventListener("click", crackRSA);
 });
-
-// -------------------- Utilità debounce --------------------
-function debounce(fn, delay = 200) {
-  let t;
-  return (...args) => {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(null, args), delay);
-  };
-}
