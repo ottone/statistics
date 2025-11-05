@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework 5 - Different Kinds of Averages</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+
+<body class="container py-4">
+  <header class="mb-5 text-center">
+    <h1>Homework 5</h1>
+    <p class="lead">Find out all possible ways of computing the various averages and in what circumstances they make sense or are useful.</p>
+  </header>
+
+  <main>
+  <article>
+
+  <section>
+    <h2>Introduction:</h2>
+    <p>
+      <p>
+        The <strong>mean</strong> is a value that synthetically represents a set of data. It is important because it allows us to summarize a large amount of numerical information 
+        into a single number that describes the typical or central value of the data.
+        The <strong>mean</strong>, the <strong>distribution</strong>, and the <strong>dispersion</strong> are closely related concepts: they describe different aspects of the same dataset. 
+      </p>
+      <p>
+        The <strong>distribution</strong> shows how values occur and how often they appear. It tells us which values are present and their frequency. 
+        <br>For example: if we analyze the heights of 100 people, the distribution will show how many are 160 cm, 165 cm, 170 cm tall, and so on.
+        The <strong>mean</strong> is an index of the central position of the distribution. It indicates where the <em>center</em> of the data lies — the value around which most of the data cluster. 
+      </p>
+      <p>
+        For instance, if the average height is 170 cm, it means that most people are around 170 cm tall. The mean summarizes the distribution with a single representative number. 
+        It serves to describe the <strong>balance point</strong> of the data. The <strong>dispersion</strong> measures how spread out the data are in relation to the mean or to a reference value. 
+        If all the data are close to the mean, the dispersion is low. If the data vary greatly from one another, the dispersion is high.
+      </p>
+      <p>
+        The mean shows where the center of the distribution is located. It does not describe the full shape of the data, but it identifies the point around which values tend to cluster. 
+        However, two different distributions one very narrow and one very wide may have the same mean but different dispersion. 
+        Thus, the mean indicates <strong>where the center is</strong>, while dispersion describes <strong>how far</strong> the data spread from that center.
+      </p>
+      <p>
+        The <strong>median</strong> and the <strong>mode</strong> are two important measures of location, also known as measures of central tendency. 
+        Along with the mean, they help describe the center of a dataset and provide insight into how values are distributed. 
+        They are especially useful when data are not symmetrically distributed or when extreme values distort the average.
+      </p>
+      <p>
+        The <strong>median</strong> is the middle value of an ordered dataset. 
+        It divides the data into two equal halves, meaning that 50 percent of the observations lie below it and 50 percent lie above it.
+        When the number of observations is odd, the median corresponds to the central value; when it is even, it is the average of the two central values.
+      </p>
+      <p>
+        For example, in the dataset 3, 5, 7, 8, 10, the <strong>median</strong> is 7. The <strong>median</strong> is particularly useful when dealing with skewed data or when the dataset contains outliers, 
+        such as in income distributions or property prices. It is not affected by extreme values, which makes it a robust measure of central location. However, it does not take 
+        into account the magnitude of all the observations and is therefore less sensitive to small variations within the dataset. The mode represents the most frequent value in a dataset. 
+        Unlike the mean or the median, it can be applied not only to numerical data but also to qualitative or categorical variables. 
+      </p>
+      <p>
+        For example, in the dataset 2, 3, 3, 5, 7, 7, 7, 9, the <strong>mode</strong> is 7, since it appears most often. The <strong>mode</strong> is useful when identifying the most common 
+        category or the most repeated value, such as the most frequently purchased product or the most common test result. It is easy to understand and compute, but it can also be less
+        informative because a dataset may have no <strong>mode</strong>, one <strong>mode</strong>, or several <strong>modes</strong>, and it does not provide information about the variability of the data.
+      </p>
+      <p>
+        In summary, the <strong>median</strong> identifies the middle point of a dataset, while the <strong>mode</strong> shows the most common or frequent value. 
+        Together with the <strong>mean</strong>, they provide a more
+        complete understanding of the central tendency and allow for better interpretation of data, especially when distributions are irregular or contain outliers.
+      </p>
+    </p>
+  </section>
+
+  <section>
+    <h2>Types of Mean</h2>
+    <p>
+      In statistics, several types of means exist — each useful in different situations, 
+      depending on how the data are distributed and what kind of phenomenon is being studied.
+    </p>
+  </section>
+
+  <section>
+    <h2>1. Arithmetic Mean</h2>
+    <p>
+      The <strong>arithmetic mean</strong> is the value obtained by summing all data and dividing by their total number. 
+      It represents the “central” value of the group.
+    </p>
+
+    <div class="subsection">
+      <p><strong>Formula:</strong></p>
+      <pre><code>𝑥̄ = (x₁ + x₂ + x₃ + ... + xₙ) / n</code></pre>
+
+      <p><strong>Example:</strong></p>
+      <pre><code>Values: 6, 7, 8, 5, 9
+𝑥̄ = (6 + 7 + 8 + 5 + 9) / 5 = 35 / 5 = 7</code></pre>
+
+      <p>
+        <strong>Used for:</strong>
+        <ul>
+          <li>Summarizing data with a single representative number</li>
+          <li>Comparing groups (e.g., average grades between two classes)</li>
+          <li>Evaluating trends over time (e.g., average temperature, income)</li>
+        </ul>
+      </p>
+
+      <p>
+        ⚠️ The arithmetic mean can be affected by <strong>outliers</strong>. 
+        If one value is much larger or smaller than the rest, it can distort the result. 
+        It is best used for numerical data that are not extremely spread out.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Weighted Mean</h2>
+    <p>
+      The <strong>weighted mean</strong> is a variant of the arithmetic mean used when some values are more important (have greater “weight”) than others.
+      Each value is multiplied by its weight, and the sum of these products is divided by the total of the weights.
+    </p>
+
+    <div class="subsection">
+      <p><strong>Formula:</strong></p>
+      <pre><code>𝑥̄ₚ = (Σ (xᵢ · wᵢ)) / (Σ wᵢ)</code></pre>
+
+      <p><strong>Example:</strong></p>
+      <table class="table table-dark table-bordered text-center align-middle">
+        <thead>
+          <tr><th>Subject</th><th>Grade</th><th>Credits (Weight)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Math</td><td>8</td><td>3</td></tr>
+          <tr><td>Italian</td><td>6</td><td>2</td></tr>
+          <tr><td>English</td><td>9</td><td>1</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>𝑥̄ₚ = (8×3 + 6×2 + 9×1) / (3+2+1) = 45 / 6 = 7.5</code></pre>
+
+      <p>
+        <strong>Used for:</strong> datasets where values have different importance or frequency.  
+        <br>Examples:
+        <ul>
+          <li>Grades weighted by credits</li>
+          <li>Economic indices (e.g., consumer price index)</li>
+          <li>Composite performance indicators</li>
+        </ul>
+      </p>
+
+      <p>If all weights are equal, the weighted mean equals the arithmetic mean.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Geometric Mean</h2>
+    <p>
+      The <strong>geometric mean</strong> is the n-th root of the product of the values. 
+      Instead of summing the data, you multiply them and then take the n-th root.
+    </p>
+
+    <div class="subsection">
+      <p><strong>Formula:</strong></p>
+      <pre><code>G = (x₁ × x₂ × ... × xₙ)^(1/n)</code></pre>
+      <p>or in logarithmic form:</p>
+      <pre><code>G = exp( (1/n) Σ ln(xᵢ) )</code></pre>
+
+      <p><strong>Example:</strong></p>
+      <table class="table table-dark table-bordered text-center align-middle">
+        <thead>
+          <tr><th>Year</th><th>Growth Factor</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1st year</td><td>1.10 (+10%)</td></tr>
+          <tr><td>2nd year</td><td>1.20 (+20%)</td></tr>
+          <tr><td>3rd year</td><td>0.90 (−10%)</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>G = (1.10 × 1.20 × 0.90)^(1/3) = (1.188)^(1/3) ≈ 1.06 → +6% average growth</code></pre>
+
+      <p><strong>Used for:</strong>
+        <ul>
+          <li>Growth rates and percentages</li>
+          <li>Multiplicative processes (e.g., interest, returns, prices)</li>
+          <li>Finding an equivalent constant growth rate</li>
+        </ul>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Harmonic Mean</h2>
+    <p>
+      The <strong>harmonic mean</strong> is defined as the number of data values divided by the sum of the reciprocals of those values.  
+      All values must be positive, and small numbers have a strong influence on the result.
+    </p>
+
+    <div class="subsection">
+      <p><strong>Formula:</strong></p>
+      <pre><code>H = n / (Σ (1/xᵢ))</code></pre>
+
+      <p><strong>Example:</strong></p>
+      <table class="table table-dark table-bordered text-center align-middle">
+        <thead>
+          <tr><th>Trip</th><th>Speed (km/h)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Outbound</td><td>60</td></tr>
+          <tr><td>Return</td><td>40</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>H = 2 / (1/60 + 1/40) = 2 / (100/2400) = 48 km/h</code></pre>
+
+      <p><strong>Used for:</strong> averages of rates, speeds, or ratios when a fixed quantity (e.g., distance or product amount) is in the numerator.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Quadratic (Root Mean Square) Mean</h2>
+    <p>
+      The <strong>quadratic mean</strong> (or RMS) gives more weight to large values. 
+      It is the square root of the average of the squares of the values.
+    </p>
+
+    <div class="subsection">
+      <p><strong>Formula:</strong></p>
+      <pre><code>Mq = √( (x₁² + x₂² + ... + xₙ²) / n )</code></pre>
+      <p>or in compact form:</p>
+      <pre><code>Mq = √( (1/n) Σ xᵢ² )</code></pre>
+
+      <p><strong>Example:</strong></p>
+      <pre><code>Values: 3, 4, 5
+Mq = √((3² + 4² + 5²) / 3) = √(50 / 3) ≈ 4.08</code></pre>
+
+      <p>
+        While the arithmetic mean represents the “central value,” the quadratic mean expresses the average magnitude or intensity of the values.
+        It is useful when positive and negative values cancel each other out (e.g., alternating current, deviations).
+      </p>
+
+      <p><strong>Used for:</strong>
+        <ul>
+          <li>Data that can be positive or negative but where magnitude matters</li>
+          <li>Emphasizing large values (energy, power, variation)</li>
+          <li>Physics, engineering, and statistics (standard deviation)</li>
+        </ul>
+      </p>
+    </div>
+  </section>
+
+  <section class="mt-5">
+    <h2>References</h2>
+    <ul>
+      <li><a href="https://en.wikipedia.org/wiki/Arithmetic_mean" target="_blank">Wikipedia – Arithmetic Mean</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Weighted_mean" target="_blank">Wikipedia – Weighted Mean</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Geometric_mean" target="_blank">Wikipedia – Geometric Mean</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Harmonic_mean" target="_blank">Wikipedia – Harmonic Mean</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Root_mean_square" target="_blank">Wikipedia – Root Mean Square</a></li>
+    </ul>
+  </section>
+
+  </article>
+
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+  </main>
+
+  <footer class="mt-5 text-center">
+    <hr>
+    <p><small>&copy; 2025 Francesco – Homework 5</small></p>
+  </footer>
+
+</body>
+</html>

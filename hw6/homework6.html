@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homework – Online vs Classical Mean</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../style.css?v=3" />
+
+  <!-- Chart.js and JS logic -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/mean.js" defer></script>
+  <script src="js/variance.js" defer></script>
+  <script type="module" src="js/main.js" defer></script>
+</head>
+
+<body class="container py-4">
+  <header class="mb-5 text-center">
+    <h1>Homework – Online vs Classical Mean</h1>
+    <p class="lead">
+      This exercise demonstrates how to calculate the <strong>mean</strong> both in the traditional way (batch) and using
+      an <strong>online algorithm</strong> that updates incrementally as new data arrive.
+    </p>
+  </header>
+
+  <main>
+  
+    <!-- SECTION 1: Static comparison -->
+   <section>
+  <section class="mb-4">
+  <h2>Theoretical Background</h2>
+  <p>
+    The <strong>mean</strong> (or arithmetic average) is a measure of central tendency that summarizes a dataset
+    with a single representative value. There are two main ways to compute it:
+  </p>
+
+  <h4>1️⃣ Classical Mean</h4>
+  <p>
+    The <strong>classical arithmetic mean</strong> is computed by summing all observed values and dividing by their count:
+  </p>
+
+  <div class="formula-box text-center my-3">
+    <span style="font-size: 1.4rem; font-family: 'Times New Roman', serif;">
+      
+        x&#772; = ( 1 / n ) &nbsp; Σ<sub>i=1</sub><sup>n</sup> x<sub>i</sub>
+      
+    </span>
+  </div>
+
+  <p>
+    This requires access to <em>all</em> data at once. It works well for small datasets, but becomes inefficient when the dataset is extremely large (millions of observations);</li>
+    or when new data arrive continuously (streaming scenarios).
+  </p>
+   <p>
+    The following examples illustrate step-by-step calculations for both mean and variance using a small dataset: [2, 4, 6, 8]. We sum all the values and divide by their count:
+  </p>
+  <div class="bg-dark text-light p-3 rounded">
+    Σx = 2 + 4 + 6 + 8 = 20<br>
+    n = 4<br>
+    Mean = 20 / 4 = <strong>5</strong>
+  </div>
+
+  <hr class="my-4">
+
+  <h4>2️⃣ Online (Incremental) Mean</h4>
+  <p>
+    The <strong>online mean</strong> updates the average as new data arrive, without recomputing the entire sum. When a new value <em>x<sub>k</sub></em> is observed, the mean is updated as follows,
+    Mₖ = Mₖ₋₁ + (xₖ − Mₖ₋₁) / k
+  </p>
+  
+  <table class="table table-dark table-bordered text-center align-middle w-auto">
+    <thead>
+      <tr>
+        <th>Step (k)</th>
+        <th>xₖ</th>
+        <th>Previous mean Mₖ₋₁</th>
+        <th>Updated mean Mₖ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>2</td><td>–</td><td>2.0000</td></tr>
+      <tr><td>2</td><td>4</td><td>2.0000</td><td>3.0000</td></tr>
+      <tr><td>3</td><td>6</td><td>3.0000</td><td>4.0000</td></tr>
+      <tr><td>4</td><td>8</td><td>4.0000</td><td><strong>5.0000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    ✅ The final mean matches the classical result: <strong>5</strong>.
+  </p>
+
+  <div class="formula-box text-center my-3">
+    <span style="font-size: 1.4rem; font-family: 'Times New Roman', serif;">
+      
+        M<sub>k</sub> = M<sub>k−1</sub> + ( x<sub>k</sub> − M<sub>k−1</sub> ) / k
+      
+    </span>
+  </div>
+
+  <p>
+    This formula uses only:
+  </p>
+  <ul>
+    <li>the current mean <em>M<sub>k−1</sub></em>,</li>
+    <li>the new observation <em>x<sub>k</sub></em>,</li>
+    <li>and the total number of observations <em>k</em>.</li>
+  </ul>
+
+  <p>
+    ➤ It does <strong>not require storing all past values</strong>.<br>
+    ➤ Each update takes <strong>constant time O(1)</strong>.<br>
+    ➤ Numerical precision remains stable even for long sequences.
+  </p>
+
+  <p class="text-info">
+    In this experiment, you can choose the dataset size and compare 
+    how long it takes to update the mean with the classical vs online approach.
+  </p>
+</section>
+
+  <div class="d-flex align-items-end gap-2 mb-3">
+  <div>
+    <label for="datasetSize" class="form-label text-light">Select dataset size:</label>
+    <select id="datasetSize" class="form-select bg-dark text-light" style="width: 220px;">
+      <option value="1000">1000 values</option>
+      <option value="10000">10000 values</option>
+      <option value="100000">100000 values</option>
+      <option value="500000">500000 values</option>
+      <option value="1000000">1000000 values</option>
+      <option value="10000000">10000000 values</option>
+      <option value="100000000">100000000 values</option>
+    </select>
+  </div>
+
+  <div>
+    <button id="runIncrementalBtn" class="btn btn-primary" style="height: 38px; margin-top: 8px;">
+      Run
+    </button>
+  </div>
+</div>
+
+  <textarea id="resultArea" rows="10" class="form-control bg-dark text-light" readonly></textarea>
+<!-- === Code excerpt: Classical and Online Mean (side-by-side) === -->
+<div class="mt-3">
+  <h5>🔍 Code Summary – Mean Calculation</h5>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h6 class="text-center">Classical Mean</h6>
+      <pre class="bg-dark text-light p-3 rounded" style="white-space: pre-wrap;">
+// === Classical (Batch) Mean ===
+// Compute total sum and divide by number of elements
+export function classicalMean(data) {
+  const n = data.length;
+  if (n === 0) return 0;
+  const sum = data.reduce((a, b) => a + b, 0);
+  return sum / n;
+}
+      </pre>
+      <p class="text-muted small">
+        The <strong>classical mean</strong> requires summing all elements 
+        and dividing by their count — efficient but needs all data in memory.
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      <h6 class="text-center">Online Mean</h6>
+      <pre class="bg-dark text-light p-3 rounded" style="white-space: pre-wrap;">
+// === Online (Incremental) Mean ===
+// Given previous mean M₍ₖ₋₁₎ and a new value xₖ,
+// update the mean in constant time O(1)
+export function onlineMeanUpdate(prevMean, newValue, k) {
+  return prevMean + (newValue - prevMean) / k;
+}
+      </pre>
+      <p class="text-muted small">
+        The <strong>online mean</strong> updates the average as data arrive,
+        using constant memory and time per update.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<section>
+  <h2>Variance Online vs Classical</h2>
+  <p>
+    The variance measures how spread out the data are around the mean. It can also be computed incrementally, just like the mean. We now use the same dataset [2, 4, 6, 8].
+     Using the formula: σ² = Σ(xᵢ − x̄)² / (n − 1)
+  </p>
+  <div class="bg-dark text-light p-3 rounded">
+    Mean (x̄) = 5<br>
+    (2−5)² = 9<br>
+    (4−5)² = 1<br>
+    (6−5)² = 1<br>
+    (8−5)² = 9<br>
+    Σ(x−x̄)² = 20<br>
+    Variance = 20 / (4−1) = <strong>6.6667</strong>
+  </div>
+  <p>
+    The <strong>online variance</strong> updates both mean and variance with each new data point using the update rules: Mₖ = Mₖ₋₁ + (xₖ − Mₖ₋₁)/k
+    Sₖ = Sₖ₋₁ + (xₖ − Mₖ₋₁)(xₖ − Mₖ):
+  </p>
+
+  <table class="table table-dark table-bordered text-center align-middle w-auto">
+    <thead>
+      <tr>
+        <th>Step (k)</th>
+        <th>xₖ</th>
+        <th>Mean Mₖ</th>
+        <th>Sₖ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>2</td><td>2.0000</td><td>0.0000</td></tr>
+      <tr><td>2</td><td>4</td><td>3.0000</td><td>2.0000</td></tr>
+      <tr><td>3</td><td>6</td><td>4.0000</td><td>8.0000</td></tr>
+      <tr><td>4</td><td>8</td><td>5.0000</td><td><strong>20.0000</strong></td></tr>
+    </tbody>
+  </table>
+  <p>
+    Finally, variance = Sₙ / (n − 1) = 20 / 3 = <strong>6.6667</strong> ✅  which matches the classical calculation.
+  </p>
+
+  <div class="d-flex align-items-end gap-2 mb-3">
+    <div>
+      <label for="varDatasetSize" class="form-label text-light">Select dataset size:</label>
+      <select id="varDatasetSize" class="form-select bg-dark text-light" style="width: 220px;">
+        <option value="1000">1000 values</option>
+        <option value="10000">10000 values</option>
+        <option value="100000">100000 values</option>
+        <option value="500000">500000 values</option>
+        <option value="1000000">1000000 values</option>
+        <option value="10000000">10000000 values</option>
+        <option value="100000000">100000000 values</option>
+      </select>
+    </div>
+
+    <div>
+      <button id="runVarianceBtn" class="btn btn-primary" style="height: 38px; margin-top: 8px;">
+        Run
+      </button>
+    </div>
+  </div>
+
+  <textarea id="varianceResultArea" rows="12" class="form-control bg-dark text-light" readonly></textarea>
+  <!-- === Code excerpt: Classical and Online Variance (side-by-side) === -->
+<div class="mt-3">
+  <h5>🔍 Code Summary – Variance Calculation</h5>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h6 class="text-center">Classical Variance</h6>
+      <pre class="bg-dark text-light p-3 rounded" style="white-space: pre-wrap;">
+// === Classical Variance ===
+// Compute mean, then sum squared deviations
+export function classicalVariance(data) {
+  const n = data.length;
+  if (n <= 1) return 0;
+  const mean = data.reduce((a, b) => a + b, 0) / n;
+  const sqDiff = data.reduce((sum, x) => sum + Math.pow(x - mean, 2), 0);
+  return sqDiff / (n - 1);
+}
+      </pre>
+      <p class="text-muted small">
+        The <strong>classical variance</strong> requires two passes:
+        one for the mean and one for squared deviations.
+      </p>
+    </div>
+
+    <div class="col-md-6">
+      <h6 class="text-center">Online Variance</h6>
+      <pre class="bg-dark text-light p-3 rounded" style="white-space: pre-wrap;">
+// === Online Variance ===
+// Updates mean and M2 incrementally for each new value
+export function onlineVariance(data) {
+  let mean = 0, M2 = 0;
+  const n = data.length;
+  for (let k = 1; k <= n; k++) {
+    const x = data[k - 1];
+    const delta = x - mean;
+    mean += delta / k;
+    M2 += delta * (x - mean);
+  }
+  return M2 / (n - 1);
+}
+      </pre>
+      <p class="text-muted small">
+        The <strong>online algorithm</strong> is numerically stable and requires
+        only one pass through the data with constant memory usage.
+      </p>
+    </div>
+  </div>
+</div>
+
+    <hr class="my-5" />
+<section id="optionalDiscussion" class="mt-5">
+  <h2>Optional Discussion</h2>
+  <p>
+    From a <strong>numerical analysis</strong> and <strong>computational</strong> perspective,
+    online algorithms offer several advantages over traditional batch methods — especially
+    when dealing with large or streaming datasets.
+  </p>
+
+  <h5>1️⃣ Numerical Stability and Error Propagation</h5>
+  <p>
+    In batch algorithms, the mean and variance are often computed using large sums or differences
+    between large numbers and small corrections. This can lead to
+    <em>catastrophic cancellation</em> — a loss of precision due to subtracting nearly equal quantities.
+    Online algorithms minimize this issue by updating the
+    mean and variance incrementally, using only small local differences at each step.
+  </p>
+
+  <h5>2️⃣ Overflow and Underflow Management</h5>
+  <p>
+    Because online methods never accumulate extremely large intermediate sums,
+    they are much less likely to suffer from numeric overflow or underflow.
+    Each update operates on quantities close to the current mean, keeping numerical values well scaled.
+  </p>
+
+  <h5>3️⃣ Computational Efficiency</h5>
+  <p>
+    Classical (batch) algorithms require multiple passes through the dataset:
+    one to compute the mean and another for the variance.
+    Online methods achieve the same result in a <strong>single pass</strong>,
+    with constant memory usage (<em>O(1)</em>) and linear time complexity (<em>O(n)</em>).
+    This makes them ideal for real-time data processing, embedded systems,
+    and large-scale analytics pipelines.
+  </p>
+
+  <h5>4️⃣ Robustness and Scalability</h5>
+  <p>
+    Online algorithms scale naturally with data streams:
+    they can process new samples on the fly without storing all past data.
+    This property makes them robust and efficient in situations where data arrive continuously,
+    such as sensor networks, financial tick data, or monitoring systems.
+  </p>
+
+  <h5>5️⃣ Comparison Summary</h5>
+  <table class="table table-dark table-bordered text-center align-middle w-auto">
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Classical (Batch)</th>
+        <th>Online (Incremental)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Memory usage</td>
+        <td>O(n)</td>
+        <td><strong>O(1)</strong></td>
+      </tr>
+      <tr>
+        <td>Passes through data</td>
+        <td>2 (mean + variance)</td>
+        <td><strong>1</strong></td>
+      </tr>
+      <tr>
+        <td>Numerical stability</td>
+        <td>Prone to cancellation</td>
+        <td><strong>More stable online algorithm</strong></td>
+      </tr>
+      <tr>
+        <td>Overflow risk</td>
+        <td>Higher (large sums)</td>
+        <td><strong>Low</strong></td>
+      </tr>
+      <tr>
+        <td>Scalability</td>
+        <td>Limited by memory</td>
+        <td><strong>Excellent for streaming data</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="text-info">
+    ➤ In summary, online algorithms are <strong>numerically stable</strong>,
+    <strong>efficient</strong>, and <strong>scalable</strong>, making them the preferred
+    approach in modern computational statistics and machine learning applications.
+  </p>
+</section>
+
+  <!-- Back to home -->
+    <div class="mt-4 text-center">
+      <a href="../index.html" class="btn btn-outline-light">← Back to Home</a>
+    </div>
+  </main>
+
+  <footer class="mt-5 text-center">
+    <hr />
+    <p><small>&copy; 2025 Francesco – Homework on Mean Calculation</small></p>
+  </footer>
+</body>
+</html>
