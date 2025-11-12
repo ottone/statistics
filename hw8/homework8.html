@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework 8 - Discuss the analogies between homework 4 (LLN) and homework 7 (Follow up of LLN)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+  
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      font-family: "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    h1, h2, h3, h4, h5 {
+      color: #00bcd4;
+      font-weight: 600;
+    }
+    figure img {
+      transition: transform 0.3s ease;
+    }
+    figure img:hover {
+      transform: scale(1.02);
+    }
+    figure figcaption {
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+    .content-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+
+<body class="container py-4">
+  <header class="mb-5 text-center">
+    <h1>Homework 8 - Research Task</h1>
+    <p class="lead">
+      Discuss the analogies between this homework and the previous one based on the Bernoulli process simulation of the Law of Large Numbers,
+      highlighting similarities and differences, illustrate the mathematical properties and relationships 
+      with binomial coefficients, Pascal’s triangle, binomial expansion, the Fibonacci sequence, and combinatorial coefficients.
+    </p>
+  </header>
+
+  <main>
+  <article>
+
+  <!-- ================= DISCUSSION SECTION ================= -->
+<section class="content-box">
+  <h2 class="text-center mb-4 text-info fw-bold">Discussion: Analogies, Mathematical Properties, and Relationships</h2>
+
+  <p>
+    This assignment <a href="https://ottone.github.io/statistics/hw7/homework7.html" class="text-info fw-semibold" target="_blank">(Homework 7)</a> extends the previous simulation 
+    <a href="https://ottone.github.io/statistics/hw4/homework4.html" class="text-info fw-semibold" target="_blank">(Homework 4)</a>, based on the <strong>Bernoulli process</strong> and the 
+    <strong>Law of Large Numbers (LLN)</strong>, applying it to a new context — a sequence of hacker attacks on a server.  
+    In both cases, each experiment (or attack) can result in one of two outcomes: <em>success</em> (<code>+1</code>) or <em>failure</em> (<code>-1</code>).  
+    Each trajectory therefore represents a discrete <strong>random walk</strong> on the integer line ℤ, 
+    where the cumulative score evolves as a sum of Bernoulli trials.
+  </p>
+
+  <h5 class="mt-4 text-light">🧩 Analogies with the Bernoulli LLN Simulation</h5>
+  <p>
+    Just like in the LLN experiment, the underlying process here is a repetition of binary random events with probability <em>p</em>.  
+    As the number of trials (<em>n</em>) increases, the distribution of total outcomes approaches the <strong>binomial distribution</strong>.  
+    While the LLN focuses on the <em>mean convergence</em> of relative frequencies toward <em>p</em>,  
+    this task emphasizes the <strong>distribution of cumulative outcomes</strong>, showing how each trajectory contributes to
+    the final histogram of “security outcomes”.
+  </p>
+
+  <figure class="text-center my-4">
+         <img src="../images/histogram_binomial.png"
+         alt="Histogram vs Binomial Curve"
+         class="img-fluid rounded-3 shadow-sm" style="max-width: 600px;">
+    <figcaption>Comparison between simulated (blue bars) and theoretical (red curve) distributions.</figcaption>
+  </figure>
+
+  <h5 class="mt-4 text-light">📊 Mathematical Structure: Binomial Distribution and Coefficients</h5>
+  <p>
+    The probability that a trajectory ends at a specific final score <em>y</em> after <em>n</em> trials is given by:
+  </p>
+  <pre class="bg-dark text-light p-3 rounded-3">P(Y = y) = C(n, k) · p<sup>k</sup> · (1 - p)<sup>n - k</sup>, where  k = (n + y) / 2</pre>
+  <p>
+    Here, <code>C(n, k)</code> represents the <strong>binomial coefficient</strong> — the number of distinct ways
+    to obtain exactly <em>k</em> successes in <em>n</em> independent attempts.  
+    The histogram in the “Security Outcome” chart empirically counts how many simulated trajectories reach each final score,  
+    while the red binomial curve represents the theoretical distribution predicted by this formula.
+  </p>
+
+  <h5 class="mt-4 text-light">🔺 Connection with Tartaglia’s (Pascal’s) Triangle</h5>
+  <p>
+    Pascal’s Triangle (known in Italy as <strong>Tartaglia’s Triangle</strong>) provides a visual representation of all binomial coefficients.  
+    Each number <code>C(n, k)</code> in the triangle corresponds to a coefficient in the <strong>binomial expansion</strong> of 
+    <code>(a + b)<sup>n</sup></code>.  
+    In this simulation, each layer of the triangle can be seen as the possible score distribution after <em>n</em> attacks —  
+    showing how the number of combinations leading to each score grows symmetrically around zero.  
+    Highlighted entries correspond to scores actually observed in the simulation.
+  </p>
+
+  <figure class="text-center my-4">
+         <img src="../images/pascal_triangle.png" 
+         alt="Pascal’s Triangle" 
+         class="img-fluid rounded-3 shadow-sm" style="max-width: 500px;">
+    <figcaption>
+      Tartaglia’s Triangle illustrating binomial coefficients for successive attack levels.
+    </figcaption>
+  </figure>
+
+  <h5 class="mt-4 text-light">🌀 Link with Binomial Expansion and Fibonacci Sequence</h5>
+  <p>
+    The binomial coefficients also appear in many combinatorial and numerical structures.  
+    The coefficients in successive diagonals of Tartaglia’s Triangle generate the <strong>Fibonacci sequence</strong>:
+  </p>
+  <pre class="bg-dark text-light p-3 rounded-3">F<sub>n</sub> = C(n-1, 0) + C(n-2, 1) + C(n-3, 2) + ...</pre>
+  <p>
+    This connection reveals how binomial coefficients encode the recursive growth patterns of both probabilistic outcomes
+    and natural sequences such as Fibonacci numbers.
+  </p>
+
+  <figure class="text-center my-4">
+         <img src="../images/fibonacci_triangle.png"
+         alt="Fibonacci relation to Pascal Triangle"
+         class="img-fluid rounded-3 shadow-sm" style="max-width: 500px;">
+    <figcaption>
+      Fibonacci sequence arising from diagonal sums of Tartaglia’s Triangle.
+    </figcaption>
+  </figure>
+
+  <h5 class="mt-4 text-light">🧠 Integration of the Components</h5>
+  <p>
+    Each graphical component of this project illustrates a distinct aspect of the same stochastic process:
+  </p>
+  <ul>
+    <li><strong>Hacker’s Trajectories:</strong> show the evolution of individual random walks (+1 / −1) over <em>n</em> attacks.</li>
+    <li><strong>Security Outcome Histogram:</strong> shows how many trajectories reach each final score and how this distribution
+      converges to the theoretical binomial curve as the number of hackers grows.</li>
+    <li><strong>Tartaglia’s Triangle:</strong> visualizes the combinatorial structure <code>C(n, k)</code> underlying the distribution,
+      highlighting the scores reached during the simulation.</li>
+    <li><strong>Hacker Attack Details:</strong> connects each simulated trajectory to its final score and the corresponding binomial coefficient.</li>
+  </ul>
+
+  <p class="mt-3">
+    Together, these elements demonstrate how a simple binary process can model complex probabilistic behavior,
+    linking combinatorics, probability theory, and numerical patterns into a single coherent representation.
+  </p>
+</section>
+<!-- ======================================================= -->
+
+  <section class="mt-5">
+    <h2>References</h2>
+    <ul>
+      <li>Feller, W. (1968). <em>An Introduction to Probability Theory and Its Applications</em>. Wiley.</li>
+      <li>Grimmett, G. & Stirzaker, D. (2001). <em>Probability and Random Processes</em>. Oxford University Press.</li>
+      <li>Weisstein, E. W. (2025). “Binomial Coefficient.” From MathWorld—A Wolfram Web Resource.</li>
+    </ul>
+  </section>
+
+  </article>
+
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-outline-info px-4">← Back to Home</a>
+  </div>
+  </main>
+
+  <footer class="mt-5 text-center">
+    <hr class="border-secondary">
+    <p><small>&copy; 2025 Francesco – Homework 8</small></p>
+  </footer>
+
+</body>
+</html>

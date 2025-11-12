@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 7 - Follow Up on Law Large Number</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 7 - Follow Up Law Large Number</h1>
+  <p class="lead">Given a server that receives weekly security updates for n weeks and m attackers who can breach the system with probability p,
+                  generate random trajectories of the server’s cumulative scores, assign +1 if the server remains secure in a week and -1 if it is breached, 
+                  draw a parallel with a random walk and count how many trajectories reach each possible total score in your simulation and how those figures 
+                  converge to the binomial distribution as n and m diverge.
+                </p>
+</header>
+
+<main>
+  <section>
+  <div class="card">
+    <p class="equal-line">================================================================================================================================</p>
+    
+    </div>
+  </section>
+  <div class="sections-container">
+
+  <!-- Hacker's trajectories -->
+  <section class="analysis-card">
+    <h2>Hacker's trajectories</h2>
+    <div class="card">
+    <canvas id="LGN" width="600" height="460"></canvas>
+    </div> 
+    <p class="explanation-transparent mt-3"> 
+      Select the number of <em>Hackers</em> (each representing an independent attacker).  
+      Set the <em>Probability</em> that the server remains secure at each weekly attack (+1 = secure, −1 = breached).  
+      Choose the number of <em>Attacks</em> for each hacker. Each colored line shows one hacker’s cumulative score (Z) over time.  
+      As you increase the number of hackers, the pattern becomes more stable, illustrating how aggregated random behaviour tends to “average out”.
+    </p>
+  </section>
+
+  <!-- Security Outcome Histogram -->
+  <section class="analysis-card">
+    <h2>Security Outcome Histogram</h2>
+    <div class="card">
+    <canvas id="Gauss" width="600" height="460"></canvas>
+    </div>
+  <div class="explanation-transparent mt-3">
+    <p>
+      This histogram shows how many hackers ended with each possible final score (Z) after all attacks.  
+        Blue bars are the empirical counts from the simulation; the red line shows the theoretical binomial‐distribution for the same number of attacks and success probability.  
+        Adjust the <em>Step Slider</em> to explore how the distribution evolves over time and compare empirical outcomes with expected theoretical behaviour.
+    </p>
+  </div>
+  </section>
+
+  <div class="card" style="background-color: #111; color: white; font-family: monospace; padding: 1rem; border-radius: 10px;">
+  <div class="controls text-center">
+  <label for="attempt" class="me-2"><strong>Hackers:</strong></label>
+    <select id="attempt" class="form-select form-select-sm d-inline-block" style="width: 110px;">
+      <option value="">-- choose --</option>
+      <option value="1">1</option>
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="30">30</option> 
+    </select>
+
+    <label for="probInput" class="ms-3 me-2"><strong>probability:</strong></label>
+    <input type="number" id="probInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="0.5" min="0.1" max="1" step="0.1">
+
+  <label for="stepsInput" class="ms-3 me-2"><strong>Attacks (n):</strong></label>
+    <input type="number" id="stepsInput" class="form-control form-control-sm d-inline-block text-center"
+           style="width: 80px;" value="15" min="1" max="70" step="1">
+
+  <label for="stepSlider" class="ms-3 me-2"><strong>Attack #:</strong></label>
+    <input type="range" id="stepSlider" class="form-range d-inline-block align-middle"
+       min="1" max="50" value="50" step="1" style="width:200px;">
+    <span id="stepLabel" class="ms-2 align-middle">50</span>
+
+  </div>
+</div>
+
+  
+ 
+  <p class="equal-line">================================================================================================================================</p>
+
+<div id="pascalSection">
+  <h2 id="pascalTitle">Tartaglia's Triangle (Observed Scores Highlighted)</h2>
+  <div id="pascalTriangle"></div>
+</div>
+
+<p class="explanation-transparent mt-3">
+This diagram displays <strong>Pascal's Triangle</strong>, where each entry represents a <em>binomial coefficient</em> C(n, k).  
+Every row corresponds to the number of attacks (<em>n</em>), and each position <em>k</em> represents how many secure outcomes were obtained.  
+The highlighted cells in green mark the combinations actually reached by the hackers during the simulation.  
+They show how real outcomes correspond to specific paths in the binomial model, linking random attack trajectories to the underlying combinatorial structure.
+</p>
+
+  </div>
+</div>
+ <p class="equal-line">================================================================================================================================</p>
+
+<!-- Tabella risultati hacker -->
+<section id="resultsSection" class="mt-4">
+  <h2>Hacker Attack Details</h2>
+  <table id="resultsTable" class="table table-dark table-bordered align-middle text-center" 
+         style="background-color:#111; color:#eee; border-color:#333;">
+    <thead class="table-dark">
+      <tr>
+        <th># Hacker</th>
+        <th>Trajectory (+1 / -1)</th>
+        <th>Final Score (Z)</th>
+        <th>Binomial Coefficient C(n, k)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<p class="explanation-transparent mt-3">
+  This table lists the detailed results of the simulation for each hacker.  
+  The <strong>Trajectory</strong> column shows the complete sequence of weekly outcomes (+1 = secure, −1 = breached).  
+  The <strong>Score</strong> column reports the hacker’s final cumulative score after all attacks.  
+  The <strong>Binomial Coefficient C(n, k)</strong> column indicates the combinatorial position in Pascal’s Triangle corresponding to that score,  
+  where <em>n</em> is the total number of attacks and <em>k</em> is the number of successful (secure) outcomes.  
+  Together, these values connect individual attack sequences to the theoretical distribution of possible outcomes.
+</p>
+
+  <!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 7</small></p>
+</footer>
+
+  <script src="js/lgn.js"></script>
+  <script src="js/gauss.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/pascal.js"></script>
+
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

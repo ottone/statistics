@@ -468,3 +468,46 @@ textarea, input[type=number] {
   display: inline-block;
   color: #00c4ff;
 }
+
+#resultsSection {
+  background-color: #000;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+#resultsTable th, #resultsTable td {
+  border-color: #333 !important;
+  vertical-align: middle;
+}
+
+#resultsTable td {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+#resultsTable tbody tr:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.explanation-transparent {
+  background: rgba(255, 255, 255, 0.05); /* quasi trasparente */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 14px auto;
+  font-size: 0.95rem;
+  color: #ddd;
+  line-height: 1.55;
+  text-align: justify;
+  max-width: 900px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  backdrop-filter: blur(4px); /* leggero effetto vetro */
+}
+.explanation-transparent strong {
+  color: #4da3ff;
+}
+.explanation-transparent em {
+  color: #b0d4ff;
+}
+
+
