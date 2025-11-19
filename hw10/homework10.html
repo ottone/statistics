@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 4 - Law Large Number</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 10 - Stocastic process with continuous time</h1>
+  <p class="lead">Stocastic process with continuous time</p>
+</header>
+
+<main>
+  <section>
+ <h2 class="hw10-title">Stochastic Process with Continuous Time</h2>
+ <div class="explanation-transparent">
+  <p>
+    This page provides an interactive simulation of a <strong>stochastic process in continuous time</strong>,
+    specifically a discrete approximation of a <strong>Poisson process</strong> defined on the interval 
+    <em>[0, 1]</em>. The process is constructed by dividing the time interval into 
+    <strong>n equally spaced steps</strong> and allowing events to occur randomly at each step according to
+    a probability derived from the intensity parameter <em>λ</em>.
+  </p>
+
+  <p>
+    At every step, an event occurs with probability:
+    <br>
+    <span class="formula-box">
+      \( p = \frac{\lambda}{n} \)
+    </span>
+    <br>
+    and the cumulative number of events up to that time produces a sample path of the process.
+    When multiple paths are simulated, they reveal the typical behaviour of a Poisson process,
+    showing random fluctuations but also a clear statistical structure governed by <em>λ</em>.
+  </p>
+
+  <p>
+    The goal of this simulation is to visualize how a continuous–time stochastic process can emerge
+    from many small random increments, and how its randomness becomes structured as parameters change.
+    You can observe how different values of <em>λ</em> and different discretizations <em>n</em>
+    influence the shape and variability of the resulting trajectories.
+  </p>
+</div>
+  <div class="card">
+    <p class="equal-line">================================================================================================================================</p>
+    
+    </div>
+  </section>
+  <div class="hw10-section">
+  <h2 class="hw10-title">Stochastic Process with Continuous Time</h2
+  <div class="hw10-chart-card">
+    <div class="hw10-chart-container">
+      <canvas id="LGN"></canvas>
+    </div>
+  </div>
+
+  <!-- Controlli -->
+<div class="hw10-controls card text-center">
+   <label for="attempt" class="me-2"><strong>Attempts:</strong></label>
+    <select id="attempt" class="form-select form-select-sm d-inline-block" style="width: 110px;">
+      <option value="">-- choose --</option>
+      <option value="10">10</option>
+      <option value="100">100</option>
+      <option value="1000">1000</option>
+      <option value="10000">10000</option>
+    </select>
+
+       <label for="probInput" class="ms-3 me-2"><strong>λ (Lambda):</strong></label>
+       <input type="number" id="probInput" class="form-control form-control-sm d-inline-block text-center"
+       style="width: 80px;" value="0.5" min="0.1" max="10" step="0.1">
+
+       <label for="stepsInput" class="ms-3 me-2"><strong>n (steps):</strong></label>
+       <input type="number" id="stepsInput" class="form-control form-control-sm d-inline-block text-center"
+       style="width: 80px;" value="50" min="1" max="1000" step="1">
+
+  </div>
+
+  <h2 class="hw10-title">Distribution of Final Values</h2>
+
+  <div class="hw10-chart-card">
+    <div class="hw10-chart-container">
+      <canvas id="Gauss"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+ <p class="equal-line">================================================================================================================================</p>
+ <h2 class="hw10-title">How to Use the Simulator</h2>
+
+<div class="explanation-transparent">
+  <p><strong>Attempts</strong> — Select how many independent realizations of the process you want to simulate.  
+     Each attempt produces one sample path.</p>
+
+  <p><strong>λ (Lambda)</strong> — Controls the intensity of the process.  
+     A higher λ increases the expected number of events in the interval [0, 1].  
+     At each discrete step, events occur with probability \( p = \lambda / n \).</p>
+
+  <p><strong>n (Number of Steps)</strong> — Determines the granularity of the approximation.  
+     The interval [0, 1] is split into n steps of size \( 1/n \).  
+     Larger n values make the process behave more like an ideal continuous-time Poisson process.</p>
+
+  <p>
+    After selecting parameters, the simulation automatically generates and displays:
+    <ul>
+      <li>the stochastic process sample paths over time;</li>
+      <li>the distribution of the final values reached at time 1.</li>
+    </ul>
+    By increasing the number of attempts, you can observe the emergent statistical patterns and the 
+    characteristic behaviour of a Poisson-driven process in continuous time.
+  </p>
+</div>
+
+  <!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 10</small></p>
+</footer>
+
+  <script src="js/lgn.js"></script>
+  <script src="js/gauss.js"></script>
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

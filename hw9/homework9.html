@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 9 - Make a parallel between measure and Probability Theory</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 9 - Make a parallel between measure and Probability Theory</h1>
+  <p class="lead">Make a parallel between measure and probability Theory and derive sub additivity from the Axiom. 
+                  Explore the so called inclusion and exclusion principles
+                </p>
+</header>
+
+<main>
+
+<div class="explanation-transparent">
+  
+  <h2>Introduction</h2>
+
+Probability has been interpreted in different ways throughout its history, each
+  offering a distinct perspective on what it means for an event to be “likely.”  
+  A first interpretation is the <strong>subjective view</strong>, which associates
+  probability with a personal degree of belief, shaped by one’s own knowledge and
+  expectations. A second viewpoint is the <strong>frequentist interpretation</strong>,
+  which defines probability as the limiting value of the relative frequency of an event
+  when the number of trials becomes very large, formally expressed as
+  \( F_n \to P \) as \( n \to \infty \).  
+  A third traditional approach is the <strong>classical interpretation</strong>,
+  which assumes all outcomes are equally likely and evaluates probability by counting
+  favourable and possible outcomes.
+
+  While these perspectives provide intuition and historical context, modern probability
+  theory is grounded in an <strong>axiomatic framework</strong>. Instead of interpreting
+  probability through belief or repeated experimentation, the axiomatic approach relies
+  on a small set of fundamental rules from which the entire theory is logically derived.
+  This point of view allows probability to be treated with the same level of rigour as
+  other branches of pure mathematics.
+
+  The axiomatic formulation of probability is deeply connected to
+  <strong>measure theory</strong>. In measure theory, a measure assigns a non-negative
+  extended real number to sets in a way that satisfies properties such as
+  non-negativity and countable additivity. Probability fits naturally into this
+  structure: it is essentially a measure that has been normalized so that the total
+  measure of the entire space equals one. This simple condition transforms a generic
+  measure space into a probability space.
+
+  Formally, a probability space is described by the triple \( (\Omega, \Sigma, P) \),
+  where \( \Omega \) is the sample space containing all possible outcomes,
+  \( \Sigma \) is a σ-algebra of measurable events, and \( P \) is a probability
+  measure assigning a value between 0 and 1 to each event in \( \Sigma \).
+  The σ-algebra ensures that operations such as unions, intersections, and complements
+  remain within the set of admissible events, establishing a stable mathematical
+  environment in which probability can be defined consistently.
+
+  Understanding probability through this axiomatic and measure-theoretic lens provides
+  a unified and coherent foundation for the entire discipline. It also allows powerful
+  results—such as subadditivity and the inclusion–exclusion principle—to emerge
+  naturally from the underlying structure of the theory, reflecting the deep
+  relationship between probability and measures more generally.
+ 
+<h2>1. Measure Theory: The Axiomatic Framework</h2>
+
+  We begin with the concept of a <strong>measure space</strong>.  
+  A measure space is a triple:
+  $$(X, \Sigma, m)$$
+
+  where:
+  <ul>
+    <li><strong>X</strong> is the underlying set;</li>
+    <li><strong>Σ</strong> is a σ-algebra of subsets of X;</li>
+    <li><strong>m</strong> is a measure defined on Σ.</li>
+  </ul>
+
+  A σ-algebra satisfies:
+  <ul>
+    <li>\(\varnothing \in \Sigma\) and \(\,X \in \Sigma\);</li>
+    <li>If \(A \in \Sigma\), then the complement \(A^c \in \Sigma\);</li>
+    <li>If \(A_1, A_2, \dots \in \Sigma\), then the union \(\bigcup_i A_i \in \Sigma\).</li>
+  </ul>
+  
+  <p>The measure is a function:</p>
+
+  $$
+    m : \Sigma \to [0, +\infty]
+  $$
+
+<p>satisfying:</p>
+  <ol>
+    <ul>
+      <li><strong>Non-negativity</strong>: \( m(A) \ge 0 \) for all \( A \in \Sigma \);</li>
+
+      <li><strong>Empty set</strong>: \( m(\varnothing) = 0 \);</li>
+
+      <li><strong>Countable additivity (σ-additivity)</strong>:  
+          if \( A_i \) are pairwise disjoint:
+          <br>
+          $$ 
+          m\left(\bigcup_{i=1}^{\infty} A_i\right)
+          = \sum_{i=1}^{\infty} m(A_i)
+          $$
+      </li>
+    </ul>
+  </ol>
+
+
+
+<h2>2. Probability Theory as a Special Case of Measure Theory</h2>
+
+  Kolmogorov (1933) defines a probability space as:
+  $$(\Omega, \mathcal{F}, P)$$
+
+  where:
+  <ul>
+    <li><strong>Ω</strong> is the sample space (all possible outcomes);</li>
+    <li><strong>𝔽</strong> is a σ-algebra of events;</li>
+    <li><strong>P</strong> is a probability measure.</li>
+  </ul>
+
+  Kolmogorov's axioms:
+  <ol>
+    <li><strong>Non-negativity and boundedness</strong>:  
+        $$0 \le P(A) \le 1 \quad \text{for all } A \in \mathcal{F};$$</li>
+
+    <li><strong>Normalization</strong>:  
+        $$ P(\Omega) = 1; $$</li>
+
+    <li><strong>Countable additivity</strong>:  
+      if $E_i$ are disjoint events,
+      $$ P\left(\bigcup_{i=1}^{\infty} E_i\right)
+         = \sum_{i=1}^{\infty} P(E_i). $$
+    </li>
+  </ol>
+
+  Thus, probability theory is essentially <strong>measure theory with total measure equal to 1</strong>:
+  $$ P(\Omega) = 1. $$
+
+<h2>3. Subadditivity Derived from the Axioms</h2>
+
+  <strong>Subadditivity</strong> states that for any events A and B:
+  $$ P(A \cup B) \le P(A) + P(B). $$
+
+  <h4>Proof for two events</h4>
+
+  Decompose:
+  $$
+    A \cup B = A \,\cup\, (B \setminus A)
+  $$
+  and note that $A$ and $(B \setminus A)$ are disjoint.
+
+  By additivity:
+  $$
+    P(A \cup B) = P(A) + P(B \setminus A).
+  $$
+
+  Since $(B \setminus A) \subseteq B$, monotonicity (derived from σ-additivity) gives:
+  $$
+    P(B \setminus A) \le P(B).
+  $$
+
+  Therefore:
+  $$
+    P(A \cup B) \le P(A) + P(B).
+  $$
+
+
+  <h2>Countable subadditivity</h2>
+
+  <p>For events \(A_1, A_2, \dots\), define:</p>
+  
+  $$
+    B_1 = A_1,\quad
+    B_2 = A_2 \setminus A_1,\quad
+    B_3 = A_3 \setminus (A_1 \cup A_2),\dots
+  $$
+
+  <p>These \(B_i\) are disjoint and satisfy:</p>
+  $$
+    \bigcup_{i=1}^{\infty} A_i
+    = \bigcup_{i=1}^{\infty} B_i.
+  $$
+
+  Then:
+  $$
+    P\left(\bigcup_i A_i\right)
+    = \sum_i P(B_i)
+    \le \sum_i P(A_i).
+  $$
+
+  This proves general subadditivity.
+
+
+<h2>4. The Inclusion–Exclusion Principle</h2>
+
+
+  The inclusion–exclusion principle gives an exact formula for the probability of unions.
+
+  <h2>Two events</h2>
+
+  $$
+    P(A \cup B)
+    = P(A) + P(B) - P(A \cap B).
+  $$
+
+  <strong>Sketch of the proof:</strong>
+    $$
+    A = (A \setminus B) \cup (A \cap B)
+    $$
+
+    $$
+    B = (B \setminus A) \cup (A \cap B)
+    $$
+
+    $$
+    A \cup B = (A \setminus B) \cup (B \setminus A) \cup (A \cap B)
+    $$
+
+  Summing the first two and comparing with the last one gives the formula.
+
+  <h2>Three events</h2>
+
+  $$
+  \begin{aligned}
+  P(A \cup B \cup C) 
+  &= P(A) + P(B) + P(C) - [P(A \cap B) + P(A \cap C) + P(B \cap C)] + P(A \cap B \cap C).
+  \end{aligned}
+  $$
+
+  <strong>Sketch of the proof.</strong>  
+  The idea behind the inclusion–exclusion formula for three sets is to correct the
+  overcounting that happens when simply adding the probabilities of the individual
+  events.
+
+  <p>
+    When we sum \(P(A) + P(B) + P(C)\), each pairwise intersection is counted twice.
+    Therefore, we subtract the terms:
+    \[
+      P(A \cap B), \quad P(A \cap C), \quad P(B \cap C)
+    \]
+    to compensate for this overcounting.
+  </p>
+
+  <p>
+    However, the region where all three events overlap, \(A \cap B \cap C\),
+    has now been subtracted too many times: it was added once in each of the
+    three individual terms and subtracted once in each of the three pairwise terms.
+    This means it has been removed entirely, so we must add it back exactly once.
+  </p>
+
+  <p>
+    Combining these corrections yields:
+  </p>
+
+  $$
+  \begin{aligned}
+  P(A \cup B \cup C)
+  &= P(A) + P(B) + P(C) \\
+  &\quad - [P(A \cap B) + P(A \cap C) + P(B \cap C)] \\
+  &\quad + P(A \cap B \cap C),
+  \end{aligned}
+  $$
+
+  which is the inclusion–exclusion principle for three events.
+
+
+
+  <h2>General finite inclusion–exclusion</h2>
+
+  <p>For \(n\) events, the inclusion–exclusion formula takes the form:</p>
+
+    $$
+    \begin{aligned}
+    P\!\left(\bigcup_{i=1}^{n} A_i\right)
+    &= \sum_{i=1}^{n} P(A_i)
+       - \sum_{1 \le i < j \le n} P(A_i \cap A_j) \\
+    &\quad + \sum_{1 \le i < j < k \le n} P(A_i \cap A_j \cap A_k)
+       - \dots \\
+    &\quad + (-1)^{\,n-1} P(A_1 \cap A_2 \cap \dots \cap A_n).
+    \end{aligned}
+    $$
+
+  <p>
+  This structure is completely general and also holds for any measure \(m\)
+  by replacing \(P\) with \(m\).
+  </p>
+
+  <h2>Conclusion</h2>
+
+
+  In summary, the axiomatic approach places probability within the broader framework of
+  measure theory, showing that the two subjects share the same conceptual foundations.  
+  A probability measure is nothing more than a particular type of measure whose total
+  mass equals one, and this simple observation unifies the theory of probability with
+  the general theory of measures.
+
+  By adopting this perspective, probability becomes a rigorously structured discipline
+  in which properties are not postulated individually but derived logically from a few
+  essential axioms. Concepts such as monotonicity, subadditivity, and continuity of
+  measures arise naturally from these axioms, without the need for additional assumptions.
+  In particular, subadditivity follows directly from countable additivity and
+  non-negativity, reflecting the intuitive idea that the probability of a union can
+  never exceed the sum of the probabilities of the individual events.
+
+  The inclusion–exclusion principle further illustrates the depth of the axiomatic
+  framework. It provides an exact formula to compute the probability of unions of
+  overlapping events by carefully correcting for the regions counted multiple times.
+  This principle is not specific to probability: it extends seamlessly to any measure
+  space, confirming once again the strong structural connection between probability
+  theory and measure theory.
+
+  Overall, viewing probability as a branch of measure theory not only clarifies its
+  mathematical nature but also strengthens its conceptual foundations. The axioms serve
+  as a solid base from which all the central results of the theory can be systematically
+  derived, ensuring both internal coherence and generality.
+
+</div>
+
+
+<!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 9</small></p>
+</footer>
+
+
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

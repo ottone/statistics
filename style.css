@@ -511,3 +511,68 @@ textarea, input[type=number] {
 }
 
 
+/* ===========================
+   HOMEWORK 10 LAYOUT FIX
+   =========================== */
+
+.hw10-section {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+.hw10-chart-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem 0;
+}
+
+.hw10-chart-container {
+  width: 100%;
+  height: 450px;
+}
+
+.hw10-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.hw10-controls {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.6) !important;
+  border-radius: 8px;
+}
+
+.hw10-title {
+  text-align: center;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+/* ===========================
+   HOMEWORK 10 - CONTROLS ROW
+   =========================== */
+
+.hw10-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;             /* spazio tra gli elementi */
+  flex-wrap: nowrap;     /* 🔥 evita che vadano a capo */
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.6) !important;
+  border-radius: 8px;
+}
+
+.hw10-controls label {
+  margin: 0;
+}
+
+.hw10-controls select,
+.hw10-controls input {
+  width: 90px !important; /* dimensione uniforme */
+  display: inline-block;
+}
