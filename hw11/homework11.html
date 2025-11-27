@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3" defer></script>
+  <title>Homework 11 - Stocastic process with continuous time and continuous state</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../style.css?v=2">
+</head>
+<body class="container py-4">
+
+<header class="mb-5 text-center">
+  <h1>Homework 11 - Stocastic process with continuous time and continuous state</h1>
+  <p class="lead">Stocastic process with continuous time and countinuous state</p>
+</header>
+
+<main>
+  <section>
+ <h2 class="hw10-title">Stochastic Process with Continuous Time and countinuous state</h2>
+ <div class="explanation-transparent">
+  <p>
+  This page provides an interactive simulation of a <strong>stochastic process with continuous time and continuous state</strong>,
+  specifically a numerical approximation of a <strong>Brownian motion (also known as a Wiener process)</strong>
+  defined on the interval <em>[0, 1]</em>.
+</p>
+
+<p>
+  A Brownian motion is a fundamental model in probability theory, physics and financial mathematics.
+  It describes the random evolution of a continuous variable over time and is characterized by:
+  <ul>
+    <li>continuous trajectories (no jumps),</li>
+    <li>independent increments,</li>
+    <li>normally distributed increments,</li>
+    <li>variance proportional to elapsed time.</li>
+  </ul>
+</p>
+
+<p>
+  In this simulation, the time interval <em>[0,1]</em> is divided into <strong>n equally spaced steps</strong>
+  of length \( \Delta t = 1/n \).  
+  <p>
+  The evolution of the process is driven by small random fluctuations applied at each time step.
+  At every step, the current value is updated by adding a normally distributed random variation
+  whose magnitude depends on both the time discretization and the volatility parameter σ.
+  This mechanism can be summarized by the relation:
+  <br>
+  <br>
+  <span class="formula-box">
+    \( X_{t+\Delta t} = X_t + \sigma \sqrt{\Delta t}\,Z \) 
+  </span>
+</p>
+  <br>
+  where Z is a continuous random variable centered at zero, responsible for the random fluctuation at each step.
+  <em>σ</em> represents the volatility (intensity of randomness) of the process.
+</p>
+
+<p>
+  The standard normal random variable \( Z \) is generated using the <strong>Box–Muller transform</strong>,
+  a classical algorithm that converts two independent uniform random variables  
+  \( U_1, U_2 \sim \mathrm{Uniform}(0,1) \) into a Gaussian variable via:
+  <br>
+  <span class="formula-box">
+    \( Z = \sqrt{-2 \ln(U_1)} \cos(2\pi U_2) \)
+  </span>
+  <br>
+  This guarantees that the increments of the process follow a true normal distribution,
+  which is a defining property of Brownian motion.
+</p>
+
+<p>
+  When multiple sample paths are simulated, the resulting trajectories exhibit the typical
+  features of Brownian motion: irregular but continuous fluctuations, absence of directional bias,
+  and statistical self-similarity across different time scales.
+</p>
+
+<p>
+  Furthermore, the distribution of the final value \( X(1) \) converges to a Gaussian distribution:
+  <br>
+  <span class="formula-box">
+    \( X(1) \sim \mathcal{N}(0, \sigma^2) \)
+  </span>
+  <br>
+  illustrating the fundamental connection between Brownian motion and the normal law.
+</p>
+
+<p>
+  This simulator allows you to explore how the choice of the volatility parameter <em>σ</em>
+  and the discretization level <em>n</em> influence the qualitative and quantitative behaviour
+  of the stochastic trajectories.
+</p>
+
+
+</div>
+  <div class="card">
+    <p class="equal-line">================================================================================================================================</p>
+    
+    </div>
+  </section>
+  <div class="hw10-section">
+  <h2 class="hw10-title">Stochastic Process with Continuous Time</h2
+  <div class="hw10-chart-card">
+    <div class="hw10-chart-container">
+      <canvas id="LGN"></canvas>
+    </div>
+  </div>
+
+  <!-- Controlli -->
+<div class="hw10-controls card text-center">
+   <label for="attempt" class="me-2"><strong>Attempts:</strong></label>
+    <select id="attempt" class="form-select form-select-sm d-inline-block" style="width: 110px;">
+      <option value="">-- choose --</option>
+      <option value="10">10</option>
+      <option value="100">100</option>
+      <option value="1000">1000</option>
+      <option value="10000">10000</option>
+    </select>
+
+       <label for="probInput" class="ms-3 me-2"><strong>σ (Sigma – volatility):</strong></label>
+       <input type="number" id="probInput" class="form-control form-control-sm d-inline-block text-center"
+       style="width: 80px;" value="0.5" min="0.1" max="10" step="0.1">
+
+       <label for="stepsInput" class="ms-3 me-2"><strong>n (steps):</strong></label>
+       <input type="number" id="stepsInput" class="form-control form-control-sm d-inline-block text-center"
+       style="width: 80px;" value="50" min="1" max="1000" step="1">
+
+  </div>
+
+  <h2 class="hw10-title">Distribution of Final Values</h2>
+
+  <div class="hw10-chart-card">
+    <div class="hw10-chart-container">
+      <canvas id="Gauss"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+ <p class="equal-line">================================================================================================================================</p>
+ <h2 class="hw10-title">How to Use the Simulator</h2>
+
+<div class="explanation-transparent">
+  <p>
+    <strong>Attempts</strong> — Select how many independent realizations of the process you want to simulate.  
+    Each attempt represents one possible trajectory of the Brownian motion. Increasing this number
+    allows you to better visualize the variability and statistical structure of the process.
+  </p>
+
+  <p>
+    <strong>σ (Sigma)</strong> — Controls the volatility of the process, that is, the intensity of its random fluctuations.  
+    A higher value of σ produces wider and more erratic trajectories, while a smaller value results
+    in smoother and more concentrated paths.
+  </p>
+
+  <p>
+    <strong>n (Number of Steps)</strong> — Determines the temporal resolution of the simulation.  
+    The interval [0, 1] is divided into n smaller subintervals.  
+    Larger values of n make the simulated paths appear more continuous and closer to an ideal
+    Brownian motion.
+  </p>
+
+  <p>
+    After selecting the parameters, the simulator automatically generates and displays:
+    <ul>
+      <li>multiple sample paths of the Brownian motion over time;</li>
+      <li>the distribution of the final values at time 1.</li>
+    </ul>
+  </p>
+
+  <p>
+    By adjusting σ and the number of steps, you can observe how randomness evolves over time and
+    how the continuous fluctuations shape the overall behaviour of the process. The final values
+    follow an approximately Gaussian distribution, illustrating one of the fundamental properties
+    of Brownian motion.
+  </p>
+</div>
+
+
+  <!-- Pulsante back -->
+  <div class="mt-4 text-center">
+    <a href="../index.html" class="btn btn-primary">← Back to Home</a>
+  </div>
+</main>
+
+<footer class="mt-5 text-center">
+  <hr>
+  <p><small>&copy; 2025 Francesco – Homework 11</small></p>
+</footer>
+
+  <script src="js/lgn.js"></script>
+  <script src="js/gauss.js"></script>
+  <!-- Optional: render LaTeX math in the page -->
+  <script>
+  (function() {
+    var s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+  </script>
+
+</body>
+</html>

@@ -576,3 +576,14 @@ textarea, input[type=number] {
   width: 90px !important; /* dimensione uniforme */
   display: inline-block;
 }
+
+.rsa-select {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.rsa-select option {
+  background-color: #000;
+  color: #fff;
+}
