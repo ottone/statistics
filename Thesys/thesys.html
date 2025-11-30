@@ -188,15 +188,20 @@
       <label for="inputK" class="form-label">Iterations (k)</label>
       <input type="number" id="inputK" class="form-select rsa-select">
     </div>
+    
+    <div class="col-md-3">
+      <label for="inputS" class="form-label">Sequences (S)</label>
+      <input type="number" id="inputS" class="form-select rsa-select" value="8">
+    </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3 d-flex align-items-end">
       <button id="startFactor" class="btn btn-warning w-100">
         🔍 Start Statistical Factorization
       </button>
     </div>
   </div>
  
-  
+   
 
 
   <div id="factorResult" class="mt-4" style="display:none;">
@@ -204,10 +209,17 @@
     <pre id="factorOutput" class="explanation-transparent"></pre>
   </div>
 
-  <div class="mt-4">
-    <h5>gcd occurrence histogram</h5>
-    <canvas id="gcdChart" height="160"></canvas>
+  <div class="mt-4" style="height:350px; max-height:350px; overflow:hidden;">
+    <h5>gcd histogram gcd(|x − y|,N)</h5>
+    <canvas id="gcdChart"></canvas>
   </div>
+<br>
+<br>
+<div class="mt-4" style="height:350px; max-height:350px; overflow:hidden;">
+  <h5>Difference histogram (|x − y|)</h5>
+  <canvas id="diffChart"></canvas>
+</div>
+
 
   <!--<div class="table-responsive mt-4" id="iterTableBox" style="display:none;">-->
   <div class="table-responsive mt-4 d-none" id="iterTableBox">
